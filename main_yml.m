@@ -1,7 +1,7 @@
 %plane stress elastic property solver 
 %--------------------------------------------------------------------------
-% Authors: William Coombs, Stefan Szyniszewski
-% Last modified:   21/10/2020
+% Authors: Stefan Szyniszewski & William Coombs
+% Last modified:   19/05/2021
 % Description:
 % Script to determine the properties of a material based on a known
 % strain field, epsA, and predicted stress field from linear finite
