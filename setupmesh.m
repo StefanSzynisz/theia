@@ -11,7 +11,7 @@ function [mesh] = setupmesh
 % Boundary condition type                       Flag (BCt)
 % 
 % homogeneous Dirichlet (u = 0)                     1
-% inhomogeneous Dirichlet (u \neq 0                -1
+% inhomogeneous Dirichlet (u \neq 0 )              -1
 % homogeneous Neumann (p = 0)                       2
 % inhomogeneous Neumann (p \neq 0)                 -2
 % mixed (roller)                                    3
@@ -86,13 +86,59 @@ ly     = 1;                                                                 % do
 nelsx = 20;                                                                 % number of elements in the x direction
 nelsy = nelsx;                                                              % number of elements in the y direction
 
+%      Y
+%      ^
+%      |                                |
+%      |------------------------.       -
+%      | 26 | 27 | 28 | 29 | 30 |       |
+%      |------------------------|       |
+%      | 21 | 22 | 23 | 24 | 25 |       |
+%      |------------------------|       |
+%      | 16 | 17 | 18 | 19 | 20 |      Ly   (ny)
+%      |------------------------|       |
+%      | 11 | 12 | 13 | 14 | 15 |       |
+%      |------------------------|       |
+%      |  6 |  7 |  8 |  9 | 10 |       |
+%      |------------------------|       |
+%      |  1 |  2 |  3 |  4 |  5 |       |
+%      -----------------------------------------> X
+%                            (nx * ny)
+%                  
+%     -/-------- Lx -----------/--
+%    (nx - number of elements in X-direction)
+%
+
 %% Boundary condition information 
-BCt    = [2 -2  2 3];                                                     % boundary condition flags
+BCt    = [2 -2  2 3];                                                       % boundary condition flags
 BCu    = [0 0;                                                              % boundary condition displacements (x,y) for each edge
           0 0; 
           0 0; 
           0 0];                                                             
-BCp    = [0 -1e9 0 0];                                           % boundary condition pressures (normal) for each edge
+BCp    = [0 -1e9 0 0];                                                      % boundary condition pressures (normal) for each edge
+% Negative value for compression and positive value for tension
+
+% Second entry is pressure applied to 
+% Boundary ordering
+%
+%               ^ y
+%               |
+%               |
+%                           (2)
+%                -------------------------
+%               |                         |
+%               |                         |
+%               |                         |
+%               |                         |
+%           (1) |                         | (3)
+%               |                         |
+%               |                         |
+%               |                         |
+%               |                         |
+%               |                         |
+%                -------------------------      -----> x
+%                           (4)
+%
+
 
 %% Other settings/output options
 VTKout = 1;                                                                 % VTK output flag 
