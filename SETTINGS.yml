@@ -1,7 +1,9 @@
 --- # Settings to be used by iterative algorithm computing material properties from the strain data
 
 # Location of strain data:
-StrainDataFilePath: 'data\Strain.xlsx'  # from full-field measurement
+StrainDataFilePath:
+  - 'data\Strain.xlsx'  # from full-field measurement
+  -
 
 # Iteration settiongs:
 itMax: 50     # maximum number of iterations
