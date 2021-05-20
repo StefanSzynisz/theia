@@ -1,0 +1,447 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2 NEXT) (preloaded format=pdflatex 2021.5.6)  19 MAY 2021 15:45
+entering extended mode
+**./theia_documentation.tex
+(theia_documentation.tex
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-02-18>
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/elsarticle\elsarti
+cle.cls
+Document Class: elsarticle 2020/11/20, 3.3: Elsevier Ltd
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3kernel\expl3.sty
+Package: expl3 2021-02-18 L3 programming layer (loader) 
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3backend\l3backen
+d-pdftex.def
+File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count179
+\l__pdf_internal_box=\box47
+))
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3packages/xparse\
+xparse.sty
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3packages/xparse\
+xparse-2020-10-01.sty
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3packages/xparse\
+xparse-generic.tex)))
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/etoolbox\etoolbox.
+sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count180
+)
+\@bls=\dimen138
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\article.cls
+Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\size12.clo
+File: size12.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
+)
+\c@part=\count181
+\c@section=\count182
+\c@subsection=\count183
+\c@subsubsection=\count184
+\c@paragraph=\count185
+\c@subparagraph=\count186
+\c@figure=\count187
+\c@table=\count188
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen139
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\graphicx.
+sty
+Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\keyval.st
+y
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\graphics.
+sty
+Package: graphics 2020/08/30 v1.4c Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-cfg\graph
+ics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 105.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-def\pdfte
+x.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen140
+\Gin@req@width=\dimen141
+)
+\c@tnote=\count189
+\c@fnote=\count190
+\c@cnote=\count191
+\c@ead=\count192
+\c@author=\count193
+\@eadauthor=\toks16
+\c@affn=\count194
+\absbox=\box48
+\elsarticlehighlightsbox=\box49
+\elsarticlegrabsbox=\box50
+\keybox=\box51
+\Columnwidth=\dimen142
+\space@left=\dimen143
+\els@boxa=\box52
+\els@boxb=\box53
+\leftMargin=\dimen144
+\@enLab=\toks17
+\@sep=\skip49
+\@@sep=\skip50
+ (theia_documentation.spl)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/natbib\natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip51
+\bibsep=\skip52
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count195
+)
+\splwrite=\write3
+\openout3 = `theia_documentation.spl'.
+
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/geometry\geometry.
+sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/generic/iftex\iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+))
+\Gm@cnth=\count196
+\Gm@cntv=\count197
+\c@Gm@tempcnt=\count198
+\Gm@bindingoffset=\dimen145
+\Gm@wd@mp=\dimen146
+\Gm@odd@mp=\dimen147
+\Gm@even@mp=\dimen148
+\Gm@layoutwidth=\dimen149
+\Gm@layoutheight=\dimen150
+\Gm@layouthoffset=\dimen151
+\Gm@layoutvoffset=\dimen152
+\Gm@dimlist=\toks18
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/geometry\geometry.
+cfg))
+\appnamewidth=\dimen153
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\amssymb.s
+ty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\amsfonts.
+sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks19
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsmath.st
+y
+Package: amsmath 2020/09/23 v2.17i AMS math features
+\@mathmargin=\skip53
+
+For additional information on amsmath, use the `?' option.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amstext.st
+y
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks20
+\ex@=\dimen154
+))
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen155
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count199
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count266
+\leftroot@=\count267
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count268
+\DOTSCASE@=\count269
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box54
+\strutbox@=\box55
+\big@size=\dimen156
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count270
+\c@MaxMatrixCols=\count271
+\dotsspace@=\muskip16
+\c@parentequation=\count272
+\dspbrk@lvl=\count273
+\tag@help=\toks21
+\row@=\count274
+\column@=\count275
+\maxfields@=\count276
+\andhelp@=\toks22
+\eqnshift@=\dimen157
+\alignsep@=\dimen158
+\tagshift@=\dimen159
+\tagwidth@=\dimen160
+\totwidth@=\dimen161
+\lineht@=\dimen162
+\@envbody=\toks23
+\multlinegap=\skip54
+\multlinetaggap=\skip55
+\mathdisplay@stack=\toks24
+LaTeX Info: Redefining \[ on input line 2923.
+LaTeX Info: Redefining \] on input line 2924.
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/systeme\systeme.st
+y
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/xstring\xstring.st
+y
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/generic/xstring\xstring.
+tex
+\integerpart=\count277
+\decimalpart=\count278
+)
+Package: xstring 2019/02/06 v1.83 String manipulations (CT)
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/generic/systeme\systeme.
+tex
+\SYS_systemecode=\toks25
+\SYS_systempreamble=\toks26
+\SYSeqnum=\count279
+)
+Package: systeme 2020/05/03 v0.34 Mise en forme de systemes d'equations (CT)
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count280
+\float@exts=\toks27
+\float@box=\box56
+\@float@everytoks=\toks28
+\@floatcapt=\box57
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/latex-tools\array.
+sty
+Package: array 2020/10/01 v2.5c Tabular extension package (FMi)
+\col@sep=\dimen163
+\ar@mcellbox=\box58
+\extrarowheight=\dimen164
+\NC@list=\toks29
+\extratabsurround=\skip56
+\backup@length=\skip57
+\ar@cellbox=\box59
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-cfg\color
+.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/colortbl\colortbl.
+sty
+Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
+\everycr=\toks30
+\minrowclearance=\skip58
+)
+\rownum=\count281
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lipsum\lipsum.sty
+Package: lipsum 2021-03-03 v2.3 150 paragraphs of Lorem Ipsum dummy text
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lipsum\lipsum.ltd.
+tex
+File: lipsum.ltd.tex 2021-03-03 v2.3 The Lorem ipsum dummy text
+))
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\subcaption
+.sty
+Package: subcaption 2020/10/07 v1.3j Sub-captions (AR)
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption.st
+y
+Package: caption 2020/10/26 v3.5g Customizing captions (AR)
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption3.s
+ty
+Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
+\captionmargin=\dimen165
+\captionmargin@=\dimen166
+\captionwidth=\dimen167
+\caption@tempdima=\dimen168
+\caption@indent=\dimen169
+\caption@parindent=\dimen170
+\caption@hangindent=\dimen171
+Package caption Info: elsarticle document class detected.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption-el
+sarticle.sto
+File: caption-elsarticle.sto 2020/08/22 v2.0 Adaption of the caption package to
+ the elsarticle document class (AR)
+))
+\c@caption@flags=\count282
+\c@continuedfloat=\count283
+Package caption Info: float package is loaded.
+)
+\c@subfigure=\count284
+\c@subtable=\count285
+) (theia_documentation.aux)
+\openout1 = `theia_documentation.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/context/base/mkii\supp-p
+df.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count286
+\scratchdimen=\dimen172
+\scratchbox=\box60
+\nofMPsegments=\count287
+\nofMParguments=\count288
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count289
+\MPscratchDim=\dimen173
+\MPnumerator=\count290
+\makeMPintoPDFobject=\count291
+\everyMPtoPDFconversion=\toks32
+)
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/epstopdf-pkg\epsto
+pdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/00miktex\epstopdf-
+sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: custom
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* hratio: 1:1
+* vratio: 1:1
+* modes: 
+* h-part:(L,W,R)=(64.75394pt, 468.0pt, 64.75394pt)
+* v-part:(T,H,B)=(111.52342pt, 622.0pt, 111.52342pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=468.0pt
+* \textheight=622.0pt
+* \oddsidemargin=-7.51605pt
+* \evensidemargin=-7.51605pt
+* \topmargin=-22.74657pt
+* \headheight=50.0pt
+* \headsep=12.0pt
+* \topskip=12.0pt
+* \footskip=18.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=24.0pt
+* \skip\footins=24.0pt plus 2.0pt minus 12.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
+
+
+(C:\Users\ss0052\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+<images/Mesh.png, id=1, 506.6428pt x 447.92343pt>
+File: images/Mesh.png Graphic file (type png)
+<use images/Mesh.png>
+Package pdftex.def Info: images/Mesh.png  used on input line 36.
+(pdftex.def)             Requested size: 187.19714pt x 165.49669pt.
+<images/Load_BC.png, id=2, 502.87875pt x 444.91219pt>
+File: images/Load_BC.png Graphic file (type png)
+<use images/Load_BC.png>
+Package pdftex.def Info: images/Load_BC.png  used on input line 51.
+(pdftex.def)             Requested size: 187.19714pt x 165.61966pt.
+
+[1
+
+{C:/Users/ss0052/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./images/M
+esh.png>]
+<images/Elements_id.png, id=12, 969.6225pt x 1194.4625pt>
+File: images/Elements_id.png Graphic file (type png)
+<use images/Elements_id.png>
+Package pdftex.def Info: images/Elements_id.png  used on input line 63.
+(pdftex.def)             Requested size: 187.19714pt x 230.59543pt.
+ [2 <./images/Load_BC.png> <./images/Elements_id.png>] [3]
+(theia_documentation.aux) ) 
+Here is how much of TeX's memory you used:
+ 6476 strings out of 479288
+ 99211 string characters out of 2852568
+ 553067 words of memory out of 3000000
+ 23864 multiletter control sequences out of 15000+200000
+ 408729 words of font info for 47 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 83i,6n,88p,417b,335s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Users/ss0052/AppData/Local/Programs/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ss0052/AppData/Local/Program
+s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/ss0052/AppData
+/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/s
+s0052/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pf
+b><C:/Users/ss0052/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfont
+s/cm/cmti12.pfb>
+Output written on theia_documentation.pdf (3 pages, 355618 bytes).
+PDF statistics:
+ 37 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+
