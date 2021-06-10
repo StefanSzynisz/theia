@@ -24,7 +24,7 @@
 
 
 
-function [epsA,nx,ny,subsetspace] = ncorr_read(filename)
+function [epsA,nx,ny,subsetspace] = ncorr_read(filename,export)
 % input filename, output ordered strain components
 % convention, e11,e22,e12
 % output is a lxnx3 matrix where l is the number of frames n is number of
@@ -46,7 +46,10 @@ function [epsA,nx,ny,subsetspace] = ncorr_read(filename)
     
     l=length(current_save);
     
-    epsA = zeros(l,nx*ny,3);
+    epsA = zeros(l,nx*ny,5);
+    
+    [ygrid,xgrid] = meshgrid(0:subsetspace:(ny-1)*subsetspace,0:subsetspace:(nx-1)*subsetspace);
+    pos = [xgrid(:),ygrid(:)];
     
     for i =1:l
         % read frame strain data
@@ -63,7 +66,16 @@ function [epsA,nx,ny,subsetspace] = ncorr_read(filename)
         eyy = reshape(transpose(flip(eyy,2)),[],1);
         exy = reshape(transpose(flip(exy,2)),[],1);
         
-        epsA(i,:,:) = [exx,eyy,exy];
+        epsA(i,:,:) = [pos,exx,eyy,exy];
         
     end
+    
+    if export
+        mkdir(filename(1:end-4));
+        chdir(filename(1:end-4));
+        for i = 1:l
+            csvwrite([filename(1:end-4),'_',num2str(i) ,'.csv'],squeeze(epsA(i,:,:)))
+        end
+    end
+    
 end
