@@ -1,4 +1,4 @@
-function [mesh] = setupmesh
+function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_init,v_init)
 
 %Mesh generation and input information
 %--------------------------------------------------------------------------
@@ -8,6 +8,36 @@ function [mesh] = setupmesh
 % Finite element setup information for a rectangular domain discretised
 % with 4-noded elements. 
 %
+%--------------------------------------------------------------------------
+% [coord,etpl,fext,bc,ngp,E,v] = SETUPMESH(lx,ly,nels_x,nels_y,pressure,E_init,v_init)
+%--------------------------------------------------------------------------
+% Input(s):
+%           - E_init - Young modulus for the initial mesh
+%           - v_init - Poisson ratio for the initial mesh
+%           - lx    - domain size in x-direction
+%           - ly    - domain size in y-direction
+%           - nels_x - number of elements in x-direction
+%           - nels_y - number of elements in y-direction
+%--------------------------------------------------------------------------
+% Ouput(s);
+% mesh  - structured array with finite element data, including:
+%           - coord  - nodal coordinates
+%           - etpl   - element topology
+%           - fext   - external force vector
+%           - bc     - displacement boundary conditions
+%           - ngp    - number of Gauss points (total per element)
+%           - E      - Young's modulus 
+%           - v      - Poissons ratio
+%           - ngpP   - number of Gauss points for plotting
+%           - VTKout - VTK output flag 
+%           - nelblo - no. elements/block (for vectorisation)
+%--------------------------------------------------------------------------
+% See also:
+% 
+% FORMMESH   - 2D mesh generation
+% NODES2DOFS - nodes to degrees of freedom
+%--------------------------------------------------------------------------
+
 % Boundary condition type                       Flag (BCt)
 % 
 % homogeneous Dirichlet (u = 0)                     1
@@ -15,7 +45,6 @@ function [mesh] = setupmesh
 % homogeneous Neumann (p = 0)                       2
 % inhomogeneous Neumann (p \neq 0)                 -2
 % mixed (roller)                                    3
-%
 %
 % Boundary ordering
 %
@@ -49,103 +78,24 @@ function [mesh] = setupmesh
 % including the condition when other displacement boundary conditions are
 % imposed will result in spurious results as the displacement of the nodes
 % will be over constrained.
-%
-%--------------------------------------------------------------------------
-% [coord,etpl,fext,bc,ngp,E,v] = SETUPMESH
-%--------------------------------------------------------------------------
-% Input(s):
-% 
-%--------------------------------------------------------------------------
-% Ouput(s);
-% mesh  - structured array with finite element data, including:
-%           - coord  - nodal coordinates
-%           - etpl   - element topology
-%           - fext   - external force vector
-%           - bc     - displacement boundary conditions
-%           - ngp    - number of Gauss points (total per element)
-%           - E      - Young's modulus 
-%           - v      - Poissons ratio
-%           - ngpP   - number of Gauss points for plotting
-%           - VTKout - VTK output flag 
-%           - nelblo - no. elements/block (for vectorisation)
-%--------------------------------------------------------------------------
-% See also:
-% 
-% FORMMESH   - 2D mesh generation
-% NODES2DOFS - nodes to degrees of freedom
-%--------------------------------------------------------------------------
-
-%% Basic material properties and domain size
-E      = 200e9;                                                             % Young's modulus     
-v      = 0.3;                                                               % Poissons ratio
-
-lx     = 1;                                                                 % domain length in the x direction
-ly     = 1;                                                                 % domain length in the y direction
-
-%% Numbers of elements
-nelsx = 20;                                                                 % number of elements in the x direction
-nelsy = nelsx;                                                              % number of elements in the y direction
-
-%      Y
-%      ^
-%      |                                |
-%      |------------------------.       -
-%      | 26 | 27 | 28 | 29 | 30 |       |
-%      |------------------------|       |
-%      | 21 | 22 | 23 | 24 | 25 |       |
-%      |------------------------|       |
-%      | 16 | 17 | 18 | 19 | 20 |      Ly   (ny)
-%      |------------------------|       |
-%      | 11 | 12 | 13 | 14 | 15 |       |
-%      |------------------------|       |
-%      |  6 |  7 |  8 |  9 | 10 |       |
-%      |------------------------|       |
-%      |  1 |  2 |  3 |  4 |  5 |       |
-%      -----------------------------------------> X
-%                            (nx * ny)
-%                  
-%     -/-------- Lx -----------/--
-%    (nx - number of elements in X-direction)
-%
 
 %% Boundary condition information 
 BCt    = [2 -2  2 3];                                                       % boundary condition flags
 BCu    = [0 0;                                                              % boundary condition displacements (x,y) for each edge
           0 0; 
           0 0; 
-          0 0];                                                             
-BCp    = [0 -1e9 0 0];                                                      % boundary condition pressures (normal) for each edge
-% Negative value for compression and positive value for tension
+          0 0];
+      
+% Negative value for compression and positive for tension
+BCp    = [0 -pressure 0 0];                                                 % boundary condition pressures (normal) for each edge
 
-% Second entry is pressure applied to 
-% Boundary ordering
-%
-%               ^ y
-%               |
-%               |
-%                           (2)
-%                -------------------------
-%               |                         |
-%               |                         |
-%               |                         |
-%               |                         |
-%           (1) |                         | (3)
-%               |                         |
-%               |                         |
-%               |                         |
-%               |                         |
-%               |                         |
-%                -------------------------      -----> x
-%                           (4)
-%
-
+% Second entry is pressure applied to face (2)
 
 %% Other settings/output options
 VTKout = 1;                                                                 % VTK output flag 
 nelblo = 512;                                                               % no. elements/block (for vectorisation)
 
 %--------------------------------------------------------------------------   do not change below this line
-
 ngp    = 4;                                                                 % number of Gauss points per element
 ngpP   = 1;                                                                 % number of Gauss points for plotting (set to 1)
 
@@ -157,7 +107,7 @@ BClims = [0  0  0  ly;                                                      % bo
           lx lx 0  ly;
           0  lx 0  0]; 
 
-[etpl,coord] = formMesh(nelsx,nelsy,lx,ly);                                 % element topology and nodal coordinates
+[etpl,coord] = formMesh(nels_x,nels_y,lx,ly);                               % element topology and nodal coordinates
 
 [nodes,nD] = size(coord);                                                   % number of nodes and dimensions
 [nels,~] = size(etpl);                                                      % number of elements
@@ -189,7 +139,7 @@ for edge = 1:noE                                                            % lo
         
     elseif BCe == -2                                                        % traction (Neumann) boundary conditions
         
-        p = BCp(edge)*lx/nelsx;                                             % load over each element segment 
+        p = BCp(edge)*lx/nels_x;                                             % load over each element segment 
         p = p*ones(length(nn),1)* BCnorm(edge,:);                           % nodal forces [x y]
         p = reshape(p',length(dofs),1);                                     % nodal forces (vector format)
         if BCxy(edge) == 1
@@ -215,8 +165,8 @@ for edge = 1:noE                                                            % lo
 end
 bc = bc(bc(:,1)>0,:);                                                       % remove unused bc rows
 
-E = E*ones(nels,1);                                                         % vector of Young's modulus                       	
-v = v*ones(nels,1);                                                         % vector of Poisson's ratios
+E = E_init*ones(nels,1);                                                    % vector of Young's modulus                       	
+v = v_init*ones(nels,1);                                                    % vector of Poisson's ratios
 %% Mesh data structure generation
 mesh.etpl   = etpl;                                                          % element topology
 mesh.coord  = coord;                                                         % nodal coordinates
@@ -228,7 +178,6 @@ mesh.ngp    = ngp;                                                           % n
 mesh.ngpP   = ngpP;                                                          % number of Gauss points for plotting
 mesh.VTKout = VTKout;                                                        % VTK output flag 
 mesh.nelblo = nelblo;                                                        % no. elements/block (for vectorisation)
-
 
 function [dofs] = nodes2dofs(nn,nD)
 
