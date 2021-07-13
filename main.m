@@ -14,7 +14,8 @@
 %   - Strain.xlsx   - file with the known strain information
 %--------------------------------------------------------------------------
 % Ouput(s):
-%   - 
+%   - .\results\Results.xlsx - Excell file with numeric results
+%   - .\results\epsilon-xx - input.png  - images with results
 %--------------------------------------------------------------------------
 % See also:
 % setupmesh         - problem set up 
@@ -45,6 +46,7 @@ itMax = 30;                                                                 % ma
 tol   = 1e-9;                                                               % tolerance
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
+% *************************************************************************
 nels_x = 10;                                                                % number of elements in the x direction
 nels_y = nels_x;                                                            % number of elements in the y direction
 nels = nels_x * nels_y;                                                     % total number of elements
@@ -87,10 +89,6 @@ v_init = -eps_xx_avg/eps_yy_avg;                                            % av
 %% Set FE parameters based on the user input and characteristics of the supplied data:
 mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init);             % initialize mesh  
 
-% setup information, it should be a function of input variables.
-% mesh = [coord,etpl,fext,bc,ngp,E,v]
-% E,v variables are updated at each iteration in the loop below
-
 %% Set data settings:
 % *******************
 % switch for saving incremental, iterative data and plots (for debugging
@@ -104,17 +102,28 @@ mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init);             % in
 
 %% Material iterations
 error = 2*tol;                                                              % initial error
+delta_error = -tol;                                                         % initialize delta_error as negative number to start while loop
 itnum = 0;                                                                  % zero iteration counter
 
-while error > tol && itnum < itMax                                          % while loop 
+while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing) 
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
     [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
     [E,v] = updateElasticProp(sig,epsA);                                    % solve for elastic properties
     mesh.E = E;                                                             % update Young's modulus
     mesh.v = v;                                                             % update Poisson's ratio
+    error_old = error;                                                      % error from previous iteration
     error = norm(epsH-epsA)/norm(epsA);                                     % normalised strain error
+    if itnum == 1
+        delta_error = -2*tol;                                               % keep delta_error negative to keep the while loop going
+    else
+        delta_error = error - error_old;                                    % check if delta_error < 0, which means the error is decreasing
+    end
     fprintf('%s%8.3e\n','   error                   ',error);               % return strain error
+    figure(1001);                                                           % figure number
+    matrix = vector2matrix(sig(:,2),nels_y,nels_x);                         % convert vector to matrix for plotting
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
+    drawnow limitrate nocallbacks;   title( '\sigma - yy' );                % drawnow with 20 frames per second limit
 end
 
 %% Save final results to Excel file
