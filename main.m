@@ -44,11 +44,14 @@ epsA = xlsread('Strain.xlsx');                                              % st
 % **********************
 itMax = 30;                                                                 % maximum number of iterations
 tol   = 1e-9;                                                               % tolerance
+filter_type = 'Gaussian';                                                   % 'None','Gaussian' or 'MovingAverage'
+filter_size = 3;                                                            % 3, 5, or any higher odd number. 
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
 nels_x = 10;                                                                % number of elements in the x direction
 nels_y = nels_x;                                                            % number of elements in the y direction
+% **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
 l_y = nels_y * element_size;                                                % domain size in y-direction
@@ -109,6 +112,12 @@ while error > tol && itnum < itMax && delta_error < 0                       % wh
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
     [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
+    for i=1:3                                                               % Gaussian smoothing of experimental noise
+        if (strcmp(filter_type,'None') ~= 1)
+            sig(:,i) = smoothVector(sig(:,i),nels_y,nels_x,filter_type,filter_size);
+            epsH(:,i) = smoothVector(epsH(:,i),nels_y,nels_x,filter_type,filter_size);
+        end
+    end
     [E,v] = updateElasticProp(sig,epsA);                                    % solve for elastic properties
     mesh.E = E;                                                             % update Young's modulus
     mesh.v = v;                                                             % update Poisson's ratio
@@ -180,13 +189,13 @@ imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % pl
 title( plot_titles{1} );                                                    % add plot title
 saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % save images as png file
 
-% % Matched strains:
-% plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
-% for i=1:size(plot_titles,2)
-%     fig_num = fig_num +1;
-%     figure(fig_num);                                                        % figure number
-%     matrix = vector2matrix(epsH(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
-%     imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
-%     title( strcat('\',plot_titles{i}) );                                    % add plot title
-%     saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
-% end
+% Matched strains:
+plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
+for i=1:size(plot_titles,2)
+    fig_num = fig_num +1;
+    figure(fig_num);                                                        % figure number
+    matrix = vector2matrix(epsH(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
+    title( strcat('\',plot_titles{i}) );                                    % add plot title
+    saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
+end
