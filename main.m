@@ -1,11 +1,11 @@
-%plane stress field and elastic property solver 
+%plane stress field and elastic property solver
 %--------------------------------------------------------------------------
 % Author: Stefan Szyniszewski
 % Date:   06/07/2021
-% Description: Script to computer stress field and elastic constants 
-% in a material sample, based on a known (measured) strain field, epsA. 
-% The script iterates until it converges within a given tolerance or 
-% reaches a maximum number of iteraitons (default set at 50). 
+% Description: Script to computer stress field and elastic constants
+% in a material sample, based on a known (measured) strain field, epsA.
+% The script iterates until it converges within a given tolerance or
+% reaches a maximum number of iteraitons (default set at 50).
 %
 %--------------------------------------------------------------------------
 % MAIN
@@ -18,7 +18,7 @@
 %   - .\results\epsilon-xx - input.png  - images with results
 %--------------------------------------------------------------------------
 % See also:
-% setupmesh         - problem set up 
+% setupmesh         - problem set up
 % LEfe              - finite element solver
 % updateElasticProp - elastic property update
 %--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ clearvars; close all; clc;
 addpath('functions');                                                       % add path to functions folder
 clear; tic;                                                                 % clear all breakpoints and start stopwatch for computatotional efficiency calcs
 
-%% Physical problem description: 
+%% Physical problem description:
 % *****************************
 pressure = 19.5*10^6;                                                       % pressure in [Pa]
 element_size = 0.1;                                                         % physical length (of pixel) in [m] or other consistent units
@@ -45,7 +45,7 @@ epsA = xlsread('Strain.xlsx');                                              % st
 itMax = 30;                                                                 % maximum number of iterations
 tol   = 1e-9;                                                               % tolerance
 filter_type = 'Gaussian';                                                   % 'None','Gaussian' or 'MovingAverage'
-filter_size = 3;                                                            % 3, 5, or any higher odd number. 
+filter_size = 3;                                                            % 3, 5, or any higher odd number.
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
@@ -77,7 +77,7 @@ l_y = nels_y * element_size;                                                % do
 %      -----------------------------------------> X
 %      ^    ^    ^    ^    ^    ^
 %       simply supported boundary
-%                                                    
+%
 %     -/-------- l_y -----------/--
 %    (nels_x - number of elements in X-direction)
 
@@ -90,7 +90,7 @@ E_init = -pressure / eps_yy_avg;                                            % av
 v_init = -eps_xx_avg/eps_yy_avg;                                            % average Poisson ratio
 
 %% Set FE parameters based on the user input and characteristics of the supplied data:
-mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init);             % initialize mesh  
+mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init);             % initialize mesh
 
 %% Set data settings:
 % *******************
@@ -108,7 +108,7 @@ error = 2*tol;                                                              % in
 delta_error = -tol;                                                         % initialize delta_error as negative number to start while loop
 itnum = 0;                                                                  % zero iteration counter
 
-while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing) 
+while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing)
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
     [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
@@ -131,9 +131,9 @@ while error > tol && itnum < itMax && delta_error < 0                       % wh
     fprintf('%s%8.3e\n','   error                   ',error);               % return strain error
     figure(1001);                                                           % figure number
     matrix = vector2matrix(sig(:,2),nels_y,nels_x);                         % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
     drawnow limitrate nocallbacks;                                          % drawnow with 20 frames per second limit
-    title( strcat('\sigma - yy - iteration:',num2str(itnum)) ); 
+    title( strcat('\sigma - yy - iteration:',num2str(itnum)) );
 end
 
 %% Save final results to Excel file
@@ -151,12 +151,13 @@ xlswrite(strcat(output_dir,'results.xlsx'),results);                        % wr
 %% Plot the results
 fig_num = 0;                                                                % initialize figure number
 % Stress:
+fig_num = fig_num +1;
 plot_titles = {'sigma-xx', 'sigma-yy', 'sigma-xy'};
 for i=1:size(plot_titles,2)
-    fig_num = fig_num +1;
     figure(fig_num);                                                        % figure number
+    subplot(1,size(plot_titles,2),i)
     matrix = vector2matrix(sig(:,i),nels_y,nels_x);                         % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
 %     caxis([minSigma maxSigma]);
     title( strcat('\',plot_titles{i}) );                                    % add plot title
     saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
@@ -166,16 +167,17 @@ end
 plot_titles = {'Young'};
 fig_num = fig_num +1;
 figure(fig_num);                                                            % figure number
+subplot(1,2,1)
 matrix = vector2matrix(E,nels_y,nels_x);                                    % convert vector to matrix for plotting
-imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map 
+imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map
 title( plot_titles{1} );                                                    % add plot title
 saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % save images as png file
 
 plot_titles = {'Poisson'};
-fig_num = fig_num +1;
 figure(fig_num);                                                            % figure number
+subplot(1,2,2)
 matrix = vector2matrix(v,nels_y,nels_x);                                    % convert vector to matrix for plotting
-imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map 
+imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map
 title( plot_titles{1} );                                                    % add plot title
 saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % save images as png file
 
@@ -192,11 +194,12 @@ end
 
 % Matched strains:
 plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
+fig_num = fig_num +1;
 for i=1:size(plot_titles,2)
-    fig_num = fig_num +1;
     figure(fig_num);                                                        % figure number
+    subplot(1,size(plot_titles,2),i)                                        % subplot
     matrix = vector2matrix(epsH(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
     title( strcat('\',plot_titles{i}) );                                    % add plot title
     saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
 end
