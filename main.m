@@ -164,8 +164,8 @@ for i=1:size(plot_titles,2)
 end
 
 % Elastic constants:
-plot_titles = {'Young'};
 fig_num = fig_num +1;
+plot_titles = {'Young'};
 figure(fig_num);                                                            % figure number
 subplot(1,2,1)
 matrix = vector2matrix(E,nels_y,nels_x);                                    % convert vector to matrix for plotting
@@ -183,11 +183,12 @@ saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % sa
 
 % Strains:
 plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
+fig_num = fig_num +1; 
 for i=1:size(plot_titles,2)
-    fig_num = fig_num +1;
     figure(fig_num);                                                        % figure number
+    subplot(1,size(plot_titles,2),i)                                        % subplot
     matrix = vector2matrix(epsA(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot colormap(jet) is another option
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
     title( strcat('\',plot_titles{i}) );                                    % add plot title
     saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
 end
