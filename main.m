@@ -122,7 +122,7 @@ while error > tol && itnum < itMax && delta_error < 0                       % wh
     mesh.E = E;                                                             % update Young's modulus
     mesh.v = v;                                                             % update Poisson's ratio
     error_old = error;                                                      % error from previous iteration
-    error = norm(epsH-epsA)/norm(epsA);                                     % normalised strain error
+    error = norm(epsH(:,1:2)-epsA(:,1:2))/norm(epsA(:,1:2));                % normalised strain error
     if itnum == 1
         delta_error = -2*tol;                                               % keep delta_error negative to keep the while loop going
     else
@@ -132,7 +132,8 @@ while error > tol && itnum < itMax && delta_error < 0                       % wh
     figure(1001);                                                           % figure number
     matrix = vector2matrix(sig(:,2),nels_y,nels_x);                         % convert vector to matrix for plotting
     imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map 
-    drawnow limitrate nocallbacks;   title( '\sigma - yy' );                % drawnow with 20 frames per second limit
+    drawnow limitrate nocallbacks;                                          % drawnow with 20 frames per second limit
+    title( strcat('\sigma - yy - iteration:',num2str(itnum)) ); 
 end
 
 %% Save final results to Excel file
@@ -161,17 +162,6 @@ for i=1:size(plot_titles,2)
     saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
 end
 
-% Strains:
-plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
-for i=1:size(plot_titles,2)
-    fig_num = fig_num +1;
-    figure(fig_num);                                                        % figure number
-    matrix = vector2matrix(epsA(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot colormap(jet) is another option
-    title( strcat('\',plot_titles{i}) );                                    % add plot title
-    saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
-end
-
 % Elastic constants:
 plot_titles = {'Young'};
 fig_num = fig_num +1;
@@ -188,6 +178,17 @@ matrix = vector2matrix(v,nels_y,nels_x);                                    % co
 imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map 
 title( plot_titles{1} );                                                    % add plot title
 saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % save images as png file
+
+% Strains:
+plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
+for i=1:size(plot_titles,2)
+    fig_num = fig_num +1;
+    figure(fig_num);                                                        % figure number
+    matrix = vector2matrix(epsA(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
+    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot colormap(jet) is another option
+    title( strcat('\',plot_titles{i}) );                                    % add plot title
+    saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
+end
 
 % Matched strains:
 plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
