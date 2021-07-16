@@ -181,7 +181,7 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     num_subplots = size(plot_titles,2);                                     % each gap is 20% of each plot
     size_subplot_x = (0.2 + num_subplots + (num_subplots-1)*0.2 + 0.2) * nels_x;
     size_subplot_y = (0.2 + 1.0 + 0.2) * nels_y;
-    amplify_fig = num_subplots / 2;                                         % amplify the figure for larger number of subplots
+    amplify_fig = num_subplots * 2/3;                                       % amplify the figure for larger number of subplots
 
     f = figure(fig_num);  close(fig_num); f = figure(fig_num);
     width_fig = f.Position(3); height_fig = f.Position(4);
@@ -189,6 +189,7 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     scale_fig_size_y = round(height_fig/size_subplot_y) *amplify_fig;
     scale_fig_size = min(scale_fig_size_x,scale_fig_size_y);
     f.Position(1) = 1/amplify_fig * f.Position(1);
+    f.Position(2) = 1/amplify_fig * f.Position(2);
     f.Position(3) = size_subplot_x * scale_fig_size;
     f.Position(4) = size_subplot_y * scale_fig_size;
     
