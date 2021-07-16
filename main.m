@@ -43,7 +43,7 @@ epsA = xlsread('Strain.xlsx');                                              % st
 %% Set solver tolerances:
 % **********************
 itMax = 30;                                                                 % maximum number of iterations
-tol   = 1e-9;                                                               % tolerance
+tol   = 1e-7;                                                               % tolerance
 filter_type = 'Gaussian';                                                   % 'None','Gaussian' or 'MovingAverage'
 filter_size = 3;                                                            % 3, 5, or any higher odd number.
 
@@ -143,64 +143,67 @@ if (isfolder(output_dir))                                                   % do
 else
     mkdir(output_dir);                                                      % create direcctory if it does not exist
 end
-results = [epsA,sig,E,v,epsH];
 % eps_xx,eps_yy,eps_yy,sig_xx,sig_yy,sig_xy,E,v,eps_xx_H,eps_yy_H,eps_xy_H
 % ------- input ------, ----- stress ------,mat,---- numerical strains ---
+results = [epsA,sig,E,v,epsH];
 xlswrite(strcat(output_dir,'results.xlsx'),results);                        % write results to Excell file
 
 %% Plot the results
 fig_num = 0;                                                                % initialize figure number
 % Stress:
-fig_num = fig_num +1;
-plot_titles = {'sigma-xx', 'sigma-yy', 'sigma-xy'};
-for i=1:size(plot_titles,2)
-    figure(fig_num);                                                        % figure number
-    subplot(1,size(plot_titles,2),i)
-    matrix = vector2matrix(sig(:,i),nels_y,nels_x);                         % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
-%     caxis([minSigma maxSigma]);
-    title( strcat('\',plot_titles{i}) );                                    % add plot title
-    saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
-end
+fig_num = fig_num +1; %close(fig_num);                                      % figure number
+my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
 
 % Elastic constants:
-fig_num = fig_num +1;
-plot_titles = {'Young'};
-figure(fig_num);                                                            % figure number
-subplot(1,2,1)
-matrix = vector2matrix(E,nels_y,nels_x);                                    % convert vector to matrix for plotting
-imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map
-title( plot_titles{1} );                                                    % add plot title
-saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % save images as png file
+fig_num = fig_num +1; %close(fig_num);                                      % figure number
+my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % save images as png
 
-plot_titles = {'Poisson'};
-figure(fig_num);                                                            % figure number
-subplot(1,2,2)
-matrix = vector2matrix(v,nels_y,nels_x);                                    % convert vector to matrix for plotting
-imagesc(matrix);colorbar; colormap; axis equal; axis off;                   % plot color map
-title( plot_titles{1} );                                                    % add plot title
-saveas(gcf,strcat(output_dir,plot_titles{1},'.png'));                       % save images as png file
-
-% Strains:
+% Strains - input:
 plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
-fig_num = fig_num +1; 
-for i=1:size(plot_titles,2)
-    figure(fig_num);                                                        % figure number
-    subplot(1,size(plot_titles,2),i)                                        % subplot
-    matrix = vector2matrix(epsA(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
-    title( strcat('\',plot_titles{i}) );                                    % add plot title
-    saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
-end
+fig_num = fig_num +1; %close(fig_num);                                      % figure number
+my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'strains-input','.png'));                      % save images as png
 
 % Matched strains:
 plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
-fig_num = fig_num +1;
-for i=1:size(plot_titles,2)
-    figure(fig_num);                                                        % figure number
-    subplot(1,size(plot_titles,2),i)                                        % subplot
-    matrix = vector2matrix(epsH(:,i),nels_y,nels_x);                        % convert vector to matrix for plotting
-    imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
-    title( strcat('\',plot_titles{i}) );                                    % add plot title
-    saveas(gcf,strcat(output_dir,plot_titles{i},'.png'));                   % save images as png file
+fig_num = fig_num +1; %close(fig_num);                                      % figure number
+my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'strains-matched','.png'));                      % save images as png
+
+%% FUNCTIONS
+% plotting function:
+
+function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
+    
+    num_subplots = size(plot_titles,2);                                     % each gap is 20% of each plot
+    size_subplot_x = (0.2 + num_subplots + (num_subplots-1)*0.2 + 0.2) * nels_x;
+    size_subplot_y = (0.2 + 1.0 + 0.2) * nels_y;
+    amplify_fig = num_subplots / 2;                                         % amplify the figure for larger number of subplots
+
+    f = figure(fig_num);  close(fig_num); f = figure(fig_num);
+    width_fig = f.Position(3); height_fig = f.Position(4);
+    scale_fig_size_x = round(width_fig/size_subplot_x) *amplify_fig;
+    scale_fig_size_y = round(height_fig/size_subplot_y) *amplify_fig;
+    scale_fig_size = min(scale_fig_size_x,scale_fig_size_y);
+    f.Position(1) = 1/amplify_fig * f.Position(1);
+    f.Position(3) = size_subplot_x * scale_fig_size;
+    f.Position(4) = size_subplot_y * scale_fig_size;
+    
+    pos_subplot = zeros(num_subplots,4);                                    % placeholder for the position
+    pos_subplot_1 = 0.06;                                                   % positoins of the figures
+    for ii=1:num_subplots
+        pos_subplot(ii,:) = [ pos_subplot_1 0.15 nels_x/size_subplot_x nels_y/size_subplot_y];
+        pos_subplot_1 = pos_subplot_1 + (1.2*nels_x)/size_subplot_x;
+    end   
+
+    for i=1:num_subplots                                                    % plot each subplot figure
+        subplot(1,size(plot_titles,2),i); subplot('Position',pos_subplot(i,:))
+        matrix = vector2matrix(data(:,i),nels_y,nels_x);                    % convert vector to matrix for plotting
+        imagesc(matrix);colorbar; colormap; axis equal; axis off;           % plot color map
+    %     caxis([minSigma maxSigma]);
+        title( plot_titles{i} );                                            % add plot title
+    %   title( strcat('\',plot_titles{i}) );                                % add plot title
+    end
 end
