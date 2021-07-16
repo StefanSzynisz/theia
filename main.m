@@ -150,15 +150,12 @@ xlswrite(strcat(output_dir,'results.xlsx'),results);                        % wr
 
 %% Plot the results
 fig_num = 0;                                                                % initialize figure number
-% Stress:
-fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
 
-% Elastic constants:
+% Matched strains:
+plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % save images as png
+my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'strains-matched','.png'));                      % save images as png
 
 % Strains - input:
 plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
@@ -166,11 +163,15 @@ fig_num = fig_num +1; %close(fig_num);                                      % fi
 my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
 saveas(gcf,strcat(output_dir,'strains-input','.png'));                      % save images as png
 
-% Matched strains:
-plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
+% Elastic constants:
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'strains-matched','.png'));                      % save images as png
+my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % save images as png
+
+% Stress:
+fig_num = fig_num +1; %close(fig_num);                                      % figure number
+my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
+saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
 
 %% FUNCTIONS
 % plotting function:
