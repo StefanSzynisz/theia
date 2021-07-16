@@ -185,8 +185,8 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
 
     f = figure(fig_num);  close(fig_num); f = figure(fig_num);
     width_fig = f.Position(3); height_fig = f.Position(4);
-    scale_fig_size_x = round(width_fig/size_subplot_x) *amplify_fig;
-    scale_fig_size_y = round(height_fig/size_subplot_y) *amplify_fig;
+    scale_fig_size_x = width_fig/size_subplot_x *amplify_fig;
+    scale_fig_size_y = height_fig/size_subplot_y *amplify_fig;
     scale_fig_size = min(scale_fig_size_x,scale_fig_size_y);
     f.Position(1) = 1/amplify_fig * f.Position(1);
     f.Position(2) = 1/amplify_fig * f.Position(2);
