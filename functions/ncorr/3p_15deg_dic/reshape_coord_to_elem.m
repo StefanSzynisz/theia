@@ -10,6 +10,14 @@ x = csvread("3p_15deg_dic_1.csv")
 %x = csvread("3p_15deg_dic_1_different_5.csv")
 
 function [sorted, nx, ny, delta_x, delta_y] = reshape_coord_to_elem(x)
+  % This verifies the input has no missing elements and that elements are
+  % evenly spaced
+  % It also returns: 
+  %  - sorted - the array which has been sorted and with first two columns
+  %    removed
+  %  - nx, ny - the number of elements on x and y axes
+  %  - delta_x, delta_y - the spacing between elements on x and y axes
+
 	x_sorted = sortrows(x, 1)
 	y_sorted = sortrows(x_sorted, 2)
 
