@@ -82,10 +82,19 @@ function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_init,v_init,bc_type)
 %% Boundary condition information 
 if strcmp(bc_type,'roller')
     BCt    = [2 -2  2 3];                                                   % boundary condition flags
+    % Negative value for compression and positive for tension
+    BCp    = [0 -pressure 0 0];                                             % boundary condition pressures (normal) for each edge
 elseif strcmp(bc_type,'fixed')
     BCt    = [2 -2  2 1];  
+    % Negative value for compression and positive for tension
+    BCp    = [0 -pressure 0 0];                                             % boundary condition pressures (normal) for each edge
+elseif strcmp(bc_type,'pressure')
+    BCt    = [2 -2  2 -2];  
+    % Negative value for compression and positive for tension
+    BCp    = [0 -pressure 0 -pressure];                                     % boundary condition pressures (normal) for each edge
 else
     BCt    = [2 -2  2 1];  
+    BCp    = [0 -pressure 0 0];  
 end
     
 BCu    = [0 0;                                                              % boundary condition displacements (x,y) for each edge
@@ -93,8 +102,7 @@ BCu    = [0 0;                                                              % bo
           0 0; 
           0 0];
       
-% Negative value for compression and positive for tension
-BCp    = [0 -pressure 0 0];                                                 % boundary condition pressures (normal) for each edge
+
 
 % Second entry is pressure applied to face (2)
 

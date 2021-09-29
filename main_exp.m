@@ -32,8 +32,8 @@ clear; tic;                                                                 % cl
 % *****************************
 pressure = -0.1;                                                            % pressure in [Pa]
 element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
-bc_type = 'fixed';                                                          % type of boundaries at the bottom: 'fixed' or 'roller'
-  
+bc_type = 'roller';                                                          % type of boundaries at the bottom: 'fixed' or 'roller' or 'pressure'
+   
 %% Read strain inputs:
 %****************************
 % readCSVfile
@@ -46,7 +46,7 @@ epsA = epsA(:,3:end);
 % **********************
 itMax = 18;                                                                 % maximum number of iterations
 tol   = 1e-7;                                                               % tolerance
-filter_type = 'MovingAverage';                                              % 'None','Gaussian' or 'MovingAverage'
+filter_type = 'Gaussian';                                                   % 'None','Gaussian' or 'MovingAverage'
 filter_size = 3;                                                            % 3, 5, or any higher odd number.
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
