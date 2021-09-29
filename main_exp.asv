@@ -205,7 +205,7 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     for i=1:num_subplots                                                    % plot each subplot figure
         subplot(1,size(plot_titles,2),i); subplot('Position',pos_subplot(i,:))
         matrix = vector2matrix(data(:,i),nels_y,nels_x);                    % convert vector to matrix for plotting
-        imagesc(matrix);colorbar; colormap(hsv); %colormap(hsv);            % plot color map
+        imagesc(matrix);colorbar; colormap(jet); %colormap(hsv);            % plot color map
         axis equal; axis off;
     %     caxis([minSigma maxSigma]);
         title( plot_titles{i} );                                            % add plot title

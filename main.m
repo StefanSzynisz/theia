@@ -32,6 +32,7 @@ clear; tic;                                                                 % cl
 % *****************************
 pressure = 19.5*10^6;                                                       % pressure in [Pa]
 element_size = 0.1;                                                         % physical length (of pixel) in [m] or other consistent units
+bc_type = 'fixed';                                                          % type of boundaries at the bottom: 'fixed' or 'roller'
 
 %% Read strain inputs:
 %****************************
@@ -90,7 +91,7 @@ E_init = -pressure / eps_yy_avg;                                            % av
 v_init = -eps_xx_avg/eps_yy_avg;                                            % average Poisson ratio
 
 %% Set FE parameters based on the user input and characteristics of the supplied data:
-mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init);             % initialize mesh
+mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init,bc_type);     % initialize mesh
 
 %% Set data settings:
 % *******************

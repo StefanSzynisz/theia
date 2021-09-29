@@ -1,4 +1,4 @@
-function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_init,v_init)
+function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_init,v_init,bc_type)
 
 %Mesh generation and input information
 %--------------------------------------------------------------------------
@@ -80,7 +80,14 @@ function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_init,v_init)
 % will be over constrained.
 
 %% Boundary condition information 
-BCt    = [2 -2  2 3];                                                       % boundary condition flags
+if strcmp(bc_type,'roller')
+    BCt    = [2 -2  2 3];                                                   % boundary condition flags
+elseif strcmp(bc_type,'fixed')
+    BCt    = [2 -2  2 1];  
+else
+    BCt    = [2 -2  2 1];  
+end
+    
 BCu    = [0 0;                                                              % boundary condition displacements (x,y) for each edge
           0 0; 
           0 0; 

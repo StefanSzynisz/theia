@@ -30,29 +30,28 @@ clear; tic;                                                                 % cl
 
 %% Physical problem description:
 % *****************************
-pressure = -0.1;                                                            % pressure in [Pa]
-element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
-bc_type = 'fixed';                                                          % type of boundaries at the bottom: 'fixed' or 'roller'
+pressure = 19.5*10^6;                                                       % pressure in [Pa]
+element_size = 0.1;                                                         % physical length (of pixel) in [m] or other consistent units
+bc_type = 'fixed';                                                          % type of boundaries at the bottom: 
 
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('data\exp_trial\trial_30.csv');                                              % strain input: xx, yy, xy
-epsA = epsA(:,3:end);
+epsA = xlsread('Strain.xlsx');                                              % strain input: xx, yy, xy
 % reshape_the_data;
 % Check the data
 
 %% Set solver tolerances:
 % **********************
-itMax = 18;                                                                 % maximum number of iterations
+itMax = 30;                                                                 % maximum number of iterations
 tol   = 1e-7;                                                               % tolerance
-filter_type = 'None';                                                   % 'None','Gaussian' or 'MovingAverage'
-filter_size = 1;                                                            % 3, 5, or any higher odd number.
+filter_type = 'Gaussian';                                                   % 'None','Gaussian' or 'MovingAverage'
+filter_size = 3;                                                            % 3, 5, or any higher odd number.
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
-nels_x = 47;                                                                % number of elements in the x direction
-nels_y = 91;                                                            % number of elements in the y direction
+nels_x = 10;                                                                % number of elements in the x direction
+nels_y = nels_x;                                                            % number of elements in the y direction
 % **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
@@ -92,7 +91,7 @@ E_init = -pressure / eps_yy_avg;                                            % av
 v_init = -eps_xx_avg/eps_yy_avg;                                            % average Poisson ratio
 
 %% Set FE parameters based on the user input and characteristics of the supplied data:
-mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init,bc_type);     % initialize mesh
+mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init);             % initialize mesh
 
 %% Set data settings:
 % *******************
@@ -183,20 +182,20 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     num_subplots = size(plot_titles,2);                                     % each gap is 20% of each plot
     size_subplot_x = (0.2 + num_subplots + (num_subplots-1)*0.2 + 0.2) * nels_x;
     size_subplot_y = (0.2 + 1.0 + 0.2) * nels_y;
-    amplify_fig = num_subplots * 1/2;                                       % amplify the figure for larger number of subplots
+    amplify_fig = num_subplots * 2/3;                                       % amplify the figure for larger number of subplots
 
     f = figure(fig_num);  close(fig_num); f = figure(fig_num);
     width_fig = f.Position(3); height_fig = f.Position(4);
     scale_fig_size_x = width_fig/size_subplot_x *amplify_fig;
     scale_fig_size_y = height_fig/size_subplot_y *amplify_fig;
     scale_fig_size = min(scale_fig_size_x,scale_fig_size_y);
-%     f.Position(1) = 1/amplify_fig * f.Position(1);
-    f.Position(2) = 1/num_subplots * f.Position(2);
-    f.Position(3) = size_subplot_x * scale_fig_size_x;
-    f.Position(4) = size_subplot_y * scale_fig_size_y;
+    f.Position(1) = 1/amplify_fig * f.Position(1);
+    f.Position(2) = 1/amplify_fig * f.Position(2);
+    f.Position(3) = size_subplot_x * scale_fig_size;
+    f.Position(4) = size_subplot_y * scale_fig_size;
     
     pos_subplot = zeros(num_subplots,4);                                    % placeholder for the position
-    pos_subplot_1 = 0.06;                                                    % positions of the figures
+    pos_subplot_1 = 0.06;                                                   % positoins of the figures
     for ii=1:num_subplots
         pos_subplot(ii,:) = [ pos_subplot_1 0.15 nels_x/size_subplot_x nels_y/size_subplot_y];
         pos_subplot_1 = pos_subplot_1 + (1.2*nels_x)/size_subplot_x;
@@ -205,8 +204,7 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     for i=1:num_subplots                                                    % plot each subplot figure
         subplot(1,size(plot_titles,2),i); subplot('Position',pos_subplot(i,:))
         matrix = vector2matrix(data(:,i),nels_y,nels_x);                    % convert vector to matrix for plotting
-        imagesc(matrix);colorbar; colormap(hsv); %colormap(hsv);            % plot color map
-        axis equal; axis off;
+        imagesc(matrix);colorbar; colormap; axis equal; axis off;           % plot color map
     %     caxis([minSigma maxSigma]);
         title( plot_titles{i} );                                            % add plot title
     %   title( strcat('\',plot_titles{i}) );                                % add plot title
