@@ -34,10 +34,9 @@ for nel = 1:nels                                                            % lo
     s    = sort(eig(sigM),'descend');                                       % principal stress values
     epsM = [epsA(nel,1) epsA(nel,3)/2; epsA(nel,3)/2 epsA(nel,2)];          % strain in matrix format
     e    = sort(eig(epsM),'descend');                                       % principal strain values
-    Poisson = (e(2)*s(1)-e(1)*s(2))/(e(2)*s(2)-e(1)*s(1));                   % updated Poisson's ratio
-    Poisson = min(Poisson, 0.5);
-    Poisson = max(-1.0, Poisson);
-    v(nel) = Poisson;                                                       % updated Poisson's ratio
+    updatedPoisson = e(2)*s(1)-e(1)*s(2))/(e(2)*s(2)-e(1)*s(1));            % updated Poisson's ratio
+    
+    v(nel) = (e(2)*s(1)-e(1)*s(2))/(e(2)*s(2)-e(1)*s(1));                   % updated Poisson's ratio
     E(nel) = (s(1)-v(nel)*s(2))/e(1);                                       % updated Young's modulus
 end
 fprintf('%s\n','   elastic properties updated');
