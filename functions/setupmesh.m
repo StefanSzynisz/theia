@@ -89,7 +89,7 @@ elseif strcmp(bc_type,'fixed')
     % Negative value for compression and positive for tension
     BCp    = [0 -pressure 0 0];                                             % boundary condition pressures (normal) for each edge
 elseif strcmp(bc_type,'pressure')
-    BCt    = [2 -2  2 -2];  
+    BCt    = [2 -2  3 -2];  
     % Negative value for compression and positive for tension
     BCp    = [0 -pressure 0 -pressure];                                     % boundary condition pressures (normal) for each edge
 else
