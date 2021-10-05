@@ -68,20 +68,6 @@ ny = nx;                                                                    %sam
 % correlation computations 
 [coordX, coordY] = elemCoordVector(Lx,Ly,nx,ny);
 
-%% Statistical parameters:
-% -----------------------
-E_mean = 1000;                                                              % MPa, 3D printed composite
-E_cov = 0.2;                                                                % coefficient of variation
-v_mean = 0.4;
-v_cov = 0.1;                                                                % coefficient of variation
-
-nVars = 2;                                                                  % two spatial variables are generated
-gamma = 70;                                                                 % mm, spatial correlation length
-beta = 0.5;                                                                 % varying from 0.0 to 1.0 is the cross correlation between the two variables
-distributionType = 'normal';                                                % mean=0, std=1, 
-% or 'uniform' with limits=(-1,1)
-%==========================
-
 %% Physical problem description:
 % *****************************
 pressure = -1.0;                                                            % pressure in [MPa]
@@ -94,16 +80,33 @@ if ~exist(saveDataFolder, 'dir')
     mkdir(saveDataFolder)                                                   % check if exists
 end
 
+%% Statistical parameters:
+% -----------------------
+E_mean = 1000;                                                              % MPa, 3D printed composite
+E_cov = 0.2;                                                                % coefficient of variation
+v_mean = 0.4;
+v_cov = 0.1;                                                                % coefficient of variation
+
+distributionType = 'normal';                                                % mean=0, std=1, 
+% or 'uniform' with limits=(-1,1)
+%==========================
+
 %% Compute the stochastic field:
-matrixRandVectors = generate_spatially_correl_vars(coordX, coordY, gamma, beta, distributionType);
+% gamma = 70;                                                                 % mm, spatial correlation length
+% beta = 0.5;                                                                 % varying from 0.0 to 1.0 is the cross correlation between the two variables
+% 
+% matrixRandVectors = generate_spatially_correl_vars(coordX, coordY, gamma, beta, distributionType);
+% 
+% % Save the random variables into .mat file;
+% rndFileName = [saveDataFolder 'matrixRandVectors_' timestamp '.mat'];
+% save(rndFileName,'matrixRandVectors');                                     % save unit correlated random variables
+% disp(['Random variables were written to' ' ' rndFileName]);
 
-% Save the random variables into .mat file;
-rndFileName = [saveDataFolder 'matrixRandVectors_' timestamp '.mat'];
-save(rndFileName,'matrixRandVectors');                                     % save unit correlated random variables
-disp(['Random variables were written to' ' ' rndFileName]);
-
-%% Read stochastic variable:
-
+%% Read stochastic variable from the previous run:
+read_timestamp = '154100_122';                                              % resuse existing random field
+load_from_file = ['data\' read_timestamp '\matrixRandVectors_' read_timestamp '.mat'];
+tmp = load(load_from_file,"matrixRandVectors");                             % structure
+matrixRandVectors = tmp.matrixRandVectors;                                  % extract from the structure   
 
 %% Scale normal random vectors with appropriate mean and std or limits:
 E_rand = scaleRandVect(matrixRandVectors(:,1), distributionType, E_mean, E_cov);
@@ -112,11 +115,12 @@ E_min = min(E_rand); E_max = max(E_rand);
 v_rand = scaleRandVect(matrixRandVectors(:,2), distributionType,v_mean, v_cov);
 v_min = min(v_rand); v_max = max(v_rand);
 
-%% Plot generated material parameters:
+%% Plot synthetic stochastic material parameters:
 fig_num = 0;                                                                % initialize figure number
 % Elastic constants:
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
 my_subplot(fig_num,{'Young', 'Poisson'},[E_rand,v_rand],nx, ny);
+saveas(gcf,[saveDataFolder 'material-benchmark-' bc_type timestamp '.png']);     % save images as png
 
 %% Set FE parameters based on the user input and characteristics of the supplied data:
 mesh = setupmesh(Lx,Ly,nx,ny,pressure,E_rand,v_rand,bc_type);               % initialize mesh
@@ -124,23 +128,24 @@ mesh = setupmesh(Lx,Ly,nx,ny,pressure,E_rand,v_rand,bc_type);               % in
 %% Solve FE problem:
 [sig,eps,~] = LEfe(mesh);                                                  % finite element solver
 
-% eps_xx,eps_yy,eps_yy,sig_xx,sig_yy,sig_xy,E,v,eps_xx_H,eps_yy_H,eps_xy_H
-% --- strain ---, --- stress ---,---mat---
+% eps_xx,eps_yy,eps_yy,sig_xx,sig_yy,sig_xy,E,v
+% --- strain ---, --- stress ---,--- mat ---
 results = [eps,sig,E_rand,v_rand]; 
-result_file_path = [saveDataFolder 'benchmark_' bc_type timestamp '.xlsx'];
-writematrix(results, result_file_path);                                     % write results to Excell file    
+result_file_path = [saveDataFolder 'benchmark-' bc_type '_' timestamp '.xlsx'];
+writematrix(results, result_file_path);                                     % write results to Excel file    
 
 %% Plot results:
 % Strains:
 plot_titles = {'epsilon-xx - benchamrk', 'epsilon-yy - benchmark', 'epsilon-xy - benchmark'};
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
 my_subplot(fig_num,plot_titles,eps,nx,ny);
-saveas(gcf,[saveDataFolder 'strains-benchmark-' bc_type timestamp '.png']);     % save images as png
+saveas(gcf,[saveDataFolder 'strains-benchmark-' bc_type '_' timestamp '.png']);     % save images as png
 
 % Stress:
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
 my_subplot(fig_num,{'sigma-xx - benchmark', 'sigma-yy - benchmark', 'sigma-xy - benchmark'},sig,nx,ny);
-saveas(gcf,[saveDataFolder 'stresses-benchmark-' bc_type timestamp '.png']);    % save images as png
+saveas(gcf,[saveDataFolder 'stresses-benchmark-' bc_type '_' timestamp '.png']);    % save images as png
+
 
 %% FUNCTIONS:
 function [coordX, coordY] = elemCoordVector(Lx,Ly,nx,ny)
