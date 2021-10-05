@@ -37,7 +37,7 @@ bc_type = 'pressure';                                                       % ty
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('data\exp_trial\trial_30.csv');                                            % strain input: xx, yy, xy
+epsA = readmatrix('data\exp_trial\trial_30.csv');                           % strain input: xx, yy, xy
 epsA = epsA(:,3:end);
 % reshape_the_data;
 % Check the data
@@ -113,7 +113,7 @@ itnum = 0;                                                                  % ze
 while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing)
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
-    [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
+    [sig,epsH,~] = LEfe(mesh);                                              % finite element solver
     for i=1:3                                                               % Gaussian smoothing of experimental noise
         if (strcmp(filter_type,'None') ~= 1)
             sig(:,i) = smoothVector(sig(:,i),nels_y,nels_x,filter_type,filter_size);
@@ -141,12 +141,12 @@ end
 %% Save final results to Excel file
 mydir  = pwd;                                                               % current working directory
 output_dir = strcat(mydir,'\results\');                                     % create iterations folder
-if (isfolder(output_dir))                                                   % do nothing, the folder exists
-else
-    mkdir(output_dir);                                                      % create direcctory if it does not exist
+if ~exist(output_dir, 'dir')
+    mkdir(output_dir)                                                       % check if exists
 end
+
 % eps_xx,eps_yy,eps_yy,sig_xx,sig_yy,sig_xy,E,v,eps_xx_H,eps_yy_H,eps_xy_H
-% ------- input ------, ----- stress ------,mat,---- numerical strains ---
+% --- input ---, --- stress ---,---mat---,--- numerical strains ---
 results = [epsA,sig,E,v,epsH]; 
 result_file_path = [output_dir 'results.xlsx'];
 writematrix(results, result_file_path);                                     % write results to Excell file    

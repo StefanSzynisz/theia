@@ -15,7 +15,7 @@
 %--------------------------------------------------------------------------
 % Ouput(s):
 %   - .\results\Results.xlsx - Excell file with numeric results
-%   - .\results\epsilon-xx.png, etc  - images with results
+%   - .\results\epsilon-xx - input.png  - images with results
 %--------------------------------------------------------------------------
 % See also:
 % setupmesh         - problem set up
@@ -30,28 +30,29 @@ clear; tic;                                                                 % cl
 
 %% Physical problem description:
 % *****************************
-pressure = 19.5*10^6;                                                       % pressure in [Pa]
-element_size = 0.1;                                                         % physical length (of pixel) in [m] or other consistent units
-bc_type = 'roller';                                                         % type of boundaries at the bottom: 'fixed' or 'roller'
-
+pressure = -0.1;                                                            % pressure in [Pa]
+element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
+bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'fixed' or 'roller' or 'pressure'
+   
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = readmatrix('Strain.xlsx');                                           % strain input: xx, yy, xy
+epsA = readmatrix('data\exp_trial\trial_30.csv');                           % strain input: xx, yy, xy
+epsA = epsA(:,3:end);
 % reshape_the_data;
 % Check the data
 
 %% Set solver tolerances:
 % **********************
-itMax = 30;                                                                 % maximum number of iterations
+itMax = 18;                                                                 % maximum number of iterations
 tol   = 1e-7;                                                               % tolerance
-filter_type = 'Gaussian';                                                   % 'None','Gaussian' or 'MovingAverage'
-filter_size = 3;                                                            % 3, 5, or any higher odd number.
+filter_type = 'None';                                                       % 'None','Gaussian' or 'MovingAverage'
+filter_size = 1;                                                            % 3, 5, or any higher odd number.
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
-nels_x = 10;                                                                % number of elements in the x direction
-nels_y = nels_x;                                                            % number of elements in the y direction
+nels_x = 47;                                                                % number of elements in the x direction
+nels_y = 91;                                                            % number of elements in the y direction
 % **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
@@ -145,10 +146,10 @@ if ~exist(output_dir, 'dir')
 end
 
 % eps_xx,eps_yy,eps_yy,sig_xx,sig_yy,sig_xy,E,v,eps_xx_H,eps_yy_H,eps_xy_H
-% --- input ---, --- stress ---,---mat---,--- numerical strains ---
+% --- input ------, ----- stress ------,mat,---- numerical strains ---
 results = [epsA,sig,E,v,epsH]; 
 result_file_path = [output_dir 'results.xlsx'];
-writematrix(results, result_file_path);
+writematrix(results, result_file_path);                                     % write results to Excell file    
 
 %% Plot the results
 fig_num = 0;                                                                % initialize figure number
@@ -174,5 +175,3 @@ saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % sa
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
 my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
 saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
-
-
