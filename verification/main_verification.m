@@ -132,7 +132,9 @@ mesh = setupmesh(Lx,Ly,nx,ny,pressure,E_rand,v_rand,bc_type);               % in
 % --- strain ---, --- stress ---,--- mat ---
 results = [eps,sig,E_rand,v_rand]; 
 result_file_path = [saveDataFolder 'benchmark-' bc_type '_' timestamp '.xlsx'];
-writematrix(results, result_file_path);                                     % write results to Excel file    
+strain_file_path = [saveDataFolder 'benchmark-' bc_type '_' timestamp '-strains' '.xlsx'];
+writematrix(results, result_file_path);                                     % write results to Excel file   
+writematrix(eps, strain_file_path); 
 
 %% Plot results:
 % Strains:

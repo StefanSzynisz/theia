@@ -38,7 +38,12 @@ bc_type = 'pressure';                                                       % ty
 %****************************
 % readCSVfile
 epsA = readmatrix('data\exp_trial\trial_30.csv');                           % strain input: xx, yy, xy
-epsA = epsA(:,3:end);
+
+%% Convert x,y,z, strain xx, ... into our format of elements
+%trial_30_coods.csv                                                         % unstructured input
+
+
+%% epsA = epsA(:,3:end);
 % reshape_the_data;
 % Check the data
 
@@ -52,7 +57,7 @@ filter_size = 1;                                                            % 3,
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
 nels_x = 47;                                                                % number of elements in the x direction
-nels_y = 91;                                                            % number of elements in the y direction
+nels_y = 91;                                                                % number of elements in the y direction
 % **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
