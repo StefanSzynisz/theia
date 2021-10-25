@@ -1,4 +1,4 @@
-function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_init,v_init,bc_type)
+function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_mat,v_mat,bc_type)
 
 %Mesh generation and input information
 %--------------------------------------------------------------------------
@@ -90,6 +90,7 @@ elseif strcmp(bc_type,'fixed')
     BCp    = [0 -pressure 0 0];                                             % boundary condition pressures (normal) for each edge
 elseif strcmp(bc_type,'pressure')
     BCt    = [2 -2  3 -2];  
+%     BCt    = [3 -2  2 -2];
     % Negative value for compression and positive for tension
     BCp    = [0 -pressure 0 -pressure];                                     % boundary condition pressures (normal) for each edge
 else
@@ -180,8 +181,17 @@ for edge = 1:noE                                                            % lo
 end
 bc = bc(bc(:,1)>0,:);                                                       % remove unused bc rows
 
-E = E_init*ones(nels,1);                                                    % vector of Young's modulus                       	
-v = v_init*ones(nels,1);                                                    % vector of Poisson's ratios
+if (isscalar(E_mat))
+    E = E_mat*ones(nels,1);                                                 % propagate scalar into all cells of the vector  
+else 
+    E = E_mat;                                                              % use vector input
+end
+
+if (isscalar(v_mat))
+    v = v_mat*ones(nels,1);                                                 % propagate scalar into all cells
+else
+    v = v_mat;                                                              % use vector input
+end
 %% Mesh data structure generation
 mesh.etpl   = etpl;                                                          % element topology
 mesh.coord  = coord;                                                         % nodal coordinates

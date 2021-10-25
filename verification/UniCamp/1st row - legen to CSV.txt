@@ -1,0 +1,1 @@
+Element no | eps xx | eps yy | eps xy | sig xx | sig yy | sig xy | young modulus | Poisson ratio

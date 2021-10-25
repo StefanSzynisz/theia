@@ -15,7 +15,7 @@
 %--------------------------------------------------------------------------
 % Ouput(s):
 %   - .\results\Results.xlsx - Excell file with numeric results
-%   - .\results\epsilon-xx - input.png  - images with results
+%   - .\results\epsilon-xx.png, etc  - images with results
 %--------------------------------------------------------------------------
 % See also:
 % setupmesh         - problem set up
@@ -32,12 +32,12 @@ clear; tic;                                                                 % cl
 % *****************************
 pressure = 19.5*10^6;                                                       % pressure in [Pa]
 element_size = 0.1;                                                         % physical length (of pixel) in [m] or other consistent units
-bc_type = 'fixed';                                                          % type of boundaries at the bottom: 'fixed' or 'roller'
+bc_type = 'roller';                                                         % type of boundaries at the bottom: 'fixed' or 'roller'
 
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('Strain.xlsx');                                              % strain input: xx, yy, xy
+epsA = readmatrix('Strain.xlsx');                                           % strain input: xx, yy, xy
 % reshape_the_data;
 % Check the data
 
@@ -112,7 +112,7 @@ itnum = 0;                                                                  % ze
 while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing)
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
-    [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
+    [sig,epsH,~] = LEfe(mesh);                                              % finite element solver
     for i=1:3                                                               % Gaussian smoothing of experimental noise
         if (strcmp(filter_type,'None') ~= 1)
             sig(:,i) = smoothVector(sig(:,i),nels_y,nels_x,filter_type,filter_size);
@@ -140,14 +140,15 @@ end
 %% Save final results to Excel file
 mydir  = pwd;                                                               % current working directory
 output_dir = strcat(mydir,'\results\');                                     % create iterations folder
-if (isfolder(output_dir))                                                   % do nothing, the folder exists
-else
-    mkdir(output_dir);                                                      % create direcctory if it does not exist
+if ~exist(output_dir, 'dir')
+    mkdir(output_dir)                                                       % check if exists
 end
+
 % eps_xx,eps_yy,eps_yy,sig_xx,sig_yy,sig_xy,E,v,eps_xx_H,eps_yy_H,eps_xy_H
-% ------- input ------, ----- stress ------,mat,---- numerical strains ---
-results = [epsA,sig,E,v,epsH];
-xlswrite(strcat(output_dir,'results.xlsx'),results);                        % write results to Excell file
+% --- input ---, --- stress ---,---mat---,--- numerical strains ---
+results = [epsA,sig,E,v,epsH]; 
+result_file_path = [output_dir 'results.xlsx'];
+writematrix(results, result_file_path);
 
 %% Plot the results
 fig_num = 0;                                                                % initialize figure number
@@ -174,39 +175,4 @@ fig_num = fig_num +1; %close(fig_num);                                      % fi
 my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
 saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
 
-%% FUNCTIONS
-% plotting function:
 
-function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
-    
-    num_subplots = size(plot_titles,2);                                     % each gap is 20% of each plot
-    size_subplot_x = (0.2 + num_subplots + (num_subplots-1)*0.2 + 0.2) * nels_x;
-    size_subplot_y = (0.2 + 1.0 + 0.2) * nels_y;
-    amplify_fig = num_subplots * 2/3;                                       % amplify the figure for larger number of subplots
-
-    f = figure(fig_num);  close(fig_num); f = figure(fig_num);
-    width_fig = f.Position(3); height_fig = f.Position(4);
-    scale_fig_size_x = width_fig/size_subplot_x *amplify_fig;
-    scale_fig_size_y = height_fig/size_subplot_y *amplify_fig;
-    scale_fig_size = min(scale_fig_size_x,scale_fig_size_y);
-    f.Position(1) = 1/amplify_fig * f.Position(1);
-    f.Position(2) = 1/amplify_fig * f.Position(2);
-    f.Position(3) = size_subplot_x * scale_fig_size;
-    f.Position(4) = size_subplot_y * scale_fig_size;
-    
-    pos_subplot = zeros(num_subplots,4);                                    % placeholder for the position
-    pos_subplot_1 = 0.06;                                                   % positoins of the figures
-    for ii=1:num_subplots
-        pos_subplot(ii,:) = [ pos_subplot_1 0.15 nels_x/size_subplot_x nels_y/size_subplot_y];
-        pos_subplot_1 = pos_subplot_1 + (1.2*nels_x)/size_subplot_x;
-    end   
-
-    for i=1:num_subplots                                                    % plot each subplot figure
-        subplot(1,size(plot_titles,2),i); subplot('Position',pos_subplot(i,:))
-        matrix = vector2matrix(data(:,i),nels_y,nels_x);                    % convert vector to matrix for plotting
-        imagesc(matrix);colorbar; colormap; axis equal; axis off;           % plot color map
-    %     caxis([minSigma maxSigma]);
-        title( plot_titles{i} );                                            % add plot title
-    %   title( strcat('\',plot_titles{i}) );                                % add plot title
-    end
-end

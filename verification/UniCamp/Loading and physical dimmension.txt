@@ -1,0 +1,1 @@
+Pressure load on top of 19.5MPa, and 1x1m domain discretized in 10x10 elements. 

@@ -1,4 +1,4 @@
-function [sig,strain,uv] = LEfe(mesh,itnum)
+function [sig,strain,uv] = LEfe(mesh)
 
 %LEfe - Linear Elastic finite element solver
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@ function [sig,strain,uv] = LEfe(mesh,itnum)
 % implementation. 
 %
 %--------------------------------------------------------------------------
-% [sig,strain] = LEFE(mesh,itnum)
+% [sig,strain] = LEFE(mesh)
 %--------------------------------------------------------------------------
 % Input(s):
 % mesh   - structured array of mesh data
