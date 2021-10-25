@@ -22,7 +22,8 @@
 % LEfe              - finite element solver
 % updateElasticProp - elastic property update
 %--------------------------------------------------------------------------
-clearvars; close all; clc;
+clearvars; close all;
+clc;
 % [thisPath,~,~] = fileparts(matlab.desktop.editor.getActiveFilename);
 % cd(thisPath);                                                             % change directory to current path
 addpath('functions');                                                       % add path to functions folder
@@ -30,14 +31,14 @@ clear; tic;                                                                 % cl
 
 %% Physical problem description:
 % *****************************
-pressure = -0.1;                                                            % pressure in [Pa]
+pressure = -0.06;                                                            % pressure in [Pa]
 element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
 bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'fixed' or 'roller' or 'pressure'
    
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('data\exp_trial\trial_30.csv');                                            % strain input: xx, yy, xy
+epsA = xlsread('data\trial\trial_15.csv');                                            % strain input: xx, yy, xy
 epsA = epsA(:,3:end);
 % reshape_the_data;
 % Check the data
@@ -52,7 +53,7 @@ filter_size = 1;                                                            % 3,
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
 nels_x = 47;                                                                % number of elements in the x direction
-nels_y = 91;                                                            % number of elements in the y direction
+nels_y = 69;                                                            % number of elements in the y direction
 % **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
@@ -136,6 +137,7 @@ while error > tol && itnum < itMax && delta_error < 0                       % wh
     imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
     drawnow limitrate nocallbacks;                                          % drawnow with 20 frames per second limit
     title( strcat('\sigma - yy - iteration:',num2str(itnum)) );
+    errorit(itnum)=error;
 end
 
 %% Save final results to Excel file
@@ -167,7 +169,7 @@ saveas(gcf,strcat(output_dir,'strains-input','.png'));                      % sa
 
 % Elastic constants:
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
+sub = my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
 saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % save images as png
 
 % Stress:
@@ -175,10 +177,21 @@ fig_num = fig_num +1; %close(fig_num);                                      % fi
 my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
 saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
 
+figure(fig_num+1)
+hold on;
+%scatter(1:1:length(errorit),errorit,200,'b','s','filled')
+plot(1:1:length(errorit),errorit,'-s','MarkerSize',20,...
+    'MarkerEdgeColor','b', 'MarkerFaceColor','b','linewidth',2,'color','k')
+box on;
+xlabel('Iteration')
+ylabel('RVSE/VE_{avg}')
+set(gca,'fontsize',32,'linewidth',2);
+set(gcf,'position',[10,20,720,600])
+
 %% FUNCTIONS
 % plotting function:
 
-function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
+function [sub] = my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     
     num_subplots = size(plot_titles,2);                                     % each gap is 20% of each plot
     size_subplot_x = (0.2 + num_subplots + (num_subplots-1)*0.2 + 0.2) * nels_x;
@@ -203,9 +216,10 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     end   
 
     for i=1:num_subplots                                                    % plot each subplot figure
-        subplot(1,size(plot_titles,2),i); subplot('Position',pos_subplot(i,:))
+        sub(i) = subplot(1,size(plot_titles,2),i); subplot('Position',pos_subplot(i,:))
+        hold on;
         matrix = vector2matrix(data(:,i),nels_y,nels_x);                    % convert vector to matrix for plotting
-        imagesc(matrix);colorbar; colormap(hsv); %colormap(hsv);            % plot color map
+        imagesc(matrix);colorbar; colormap(jet); %colormap(hsv);            % plot color map
         axis equal; axis off;
     %     caxis([minSigma maxSigma]);
         title( plot_titles{i} );                                            % add plot title
