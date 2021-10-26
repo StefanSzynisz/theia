@@ -6,7 +6,7 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     amplify_fig = min(num_subplots * 1/2, 1.5);                             % amplify the figure for larger number of subplots
 
     f = figure(fig_num); close(fig_num); f = figure(fig_num);
-    position = get(figure(fig_num),'Position')
+    position = get(figure(fig_num),'Position');
     width_fig = position(3); height_fig = position(4);
     scale_fig_size_x = width_fig/size_subplot_x *amplify_fig;
     scale_fig_size_y = height_fig/size_subplot_y *amplify_fig;
