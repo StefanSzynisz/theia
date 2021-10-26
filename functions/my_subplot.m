@@ -5,16 +5,18 @@ function my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     size_subplot_y = (0.2 + 1.0 + 0.2) * nels_y;
     amplify_fig = min(num_subplots * 1/2, 1.5);                             % amplify the figure for larger number of subplots
 
-    f = figure(fig_num);  close(fig_num); f = figure(fig_num);
-    width_fig = f.Position(3); height_fig = f.Position(4);
+    f = figure(fig_num); close(fig_num); f = figure(fig_num);
+    position = get(figure(fig_num),'Position')
+    width_fig = position(3); height_fig = position(4);
     scale_fig_size_x = width_fig/size_subplot_x *amplify_fig;
     scale_fig_size_y = height_fig/size_subplot_y *amplify_fig;
     scale_fig_size = min(scale_fig_size_x,scale_fig_size_y);
 %     f.Position(1) = 1/amplify_fig * f.Position(1);
-    f.Position(2) = 1/num_subplots * f.Position(2);
-    f.Position(3) = size_subplot_x * scale_fig_size_x;
-    f.Position(4) = size_subplot_y * scale_fig_size;
-    
+    position(2) = 1/num_subplots * position(2);
+    position(3) = size_subplot_x * scale_fig_size_x;
+    position(4) = size_subplot_y * scale_fig_size;
+    set(f, 'Position' , position);
+
     pos_subplot = zeros(num_subplots,4);                                    % placeholder for the position
     pos_subplot_1 = 0.06;                                                    % positions of the figures
     for ii=1:num_subplots
