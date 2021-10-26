@@ -38,8 +38,8 @@ bc_type = 'pressure';                                                       % ty
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('data\trial\trial_15.csv');                                            % strain input: xx, yy, xy
-epsA = epsA(:,3:end);
+epsA = csvread('data/random order/trialrand_1.csv');                                            % strain input: xx, yy, xy
+[epsA, nx, ny, delta_x, delta_y] = orderInputs(epsA)
 % reshape_the_data;
 % Check the data
 

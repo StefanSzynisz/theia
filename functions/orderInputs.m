@@ -22,14 +22,14 @@ function [sorted, nx, ny, delta_x, delta_y] = orderInputs(x)
   for i = 1:size(diff_sorted,1)
     if (diff_sorted(i, 1) == delta_x) && (diff_sorted(i, 2) == delta_y_start)
       % Normal elements in the middle of lines
-      assert(delta_x == diff_sorted(i, 1)) % Make sure delta_y is the same
+      assert(delta_x == diff_sorted(i, 1), "Delta x are not all the same") % Make sure delta_y is the same
       nx_cnt = nx_cnt + 1
     elseif (ny_cnt == -1)
       % Beginning of second y-axis, find out what delta_y is here
       disp(delta_x)
       disp(nx_cnt)
       disp(diff_sorted(i, 1))
-      assert((delta_x * nx_cnt) == diff_sorted(i, 1) * -1) % Make sure delta_x is the same
+      assert((delta_x * nx_cnt) == diff_sorted(i, 1) * -1, "Delta x are not all the same") % Make sure delta_x is the same
       ny_cnt = 1
       delta_y = diff_sorted(i, 2)
       nx = nx_cnt + 1
@@ -38,8 +38,8 @@ function [sorted, nx, ny, delta_x, delta_y] = orderInputs(x)
       nx_cnt = 0
     else
       % Normal beginning of new line
-      assert((delta_x * nx_cnt) == diff_sorted(i, 1) * -1) % Make sure delta_x is the same
-      assert(delta_y == diff_sorted(i, 2)) % Make sure delta_y is the same
+      assert((delta_x * nx_cnt) == diff_sorted(i, 1) * -1, "Delta x are not all the same") % Make sure delta_x is the same
+      assert(delta_y == diff_sorted(i, 2), "Delta y are not all the same" ) % Make sure delta_y is the same
       ny_cnt = ny_cnt + 1
       assert((nx_cnt+1) == nx)
       nx_cnt = 0
