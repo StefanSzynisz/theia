@@ -31,14 +31,14 @@ clear; tic;                                                                 % cl
 
 %% Physical problem description:
 % *****************************
-pressure = -0.06;                                                            % pressure in [Pa]
-element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
+pressure = -0.10;        %-0.06 for 15                                                    % pressure in [Pa]
+element_size = 0.8592*1.5;                                                      % physical length (of pixel) in [m] or other consistent units
 bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'fixed' or 'roller' or 'pressure'
    
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('data\trial\trial_15.csv');                                            % strain input: xx, yy, xy
+epsA = xlsread('data\exp_trial\trial_30.csv');                                            % strain input: xx, yy, xy
 epsA = epsA(:,3:end);
 % reshape_the_data;
 % Check the data
@@ -53,7 +53,7 @@ filter_size = 1;                                                            % 3,
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
 nels_x = 47;                                                                % number of elements in the x direction
-nels_y = 69;                                                            % number of elements in the y direction
+nels_y = 91;                                                            % number of elements in the y direction
 % **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
@@ -114,7 +114,7 @@ itnum = 0;                                                                  % ze
 while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing)
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
-    [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
+    [sig,epsH,~] = LEfe(mesh);                                        % finite element solver
     for i=1:3                                                               % Gaussian smoothing of experimental noise
         if (strcmp(filter_type,'None') ~= 1)
             sig(:,i) = smoothVector(sig(:,i),nels_y,nels_x,filter_type,filter_size);
@@ -152,44 +152,87 @@ end
 results = [epsA,sig,E,v,epsH];
 xlswrite(strcat(output_dir,'results.xlsx'),results);                        % write results to Excell file
 
+%% Plot individually
+individual_plot(7,'epsilon-xx - matched',epsH(:,1),nels_x, nels_y)
+caxis([-0.07,0.005])
+saveas(gcf,strcat(output_dir,'epsilon-xx - matched','.png')); 
+individual_plot(8,'epsilon-yy - matched',epsH(:,2),nels_x, nels_y)
+caxis([0.03,0.18])
+saveas(gcf,strcat(output_dir,'epsilon-yy - matched','.png')); 
+individual_plot(9,'epsilon-xy - matched',epsH(:,3),nels_x, nels_y)
+caxis([-0.02,0.02])
+saveas(gcf,strcat(output_dir,'epsilon-xy - matched','.png')); 
+individual_plot(10,'epsilon-xx - input',epsA(:,1),nels_x, nels_y)
+caxis([-0.07,0.005])
+saveas(gcf,strcat(output_dir,'epsilon-xx - input','.png')); 
+individual_plot(11,'epsilon-yy - input',epsA(:,2),nels_x, nels_y)
+caxis([0.03,0.18])
+saveas(gcf,strcat(output_dir,'epsilon-yy - input','.png')); 
+individual_plot(12,'epsilon-xy - input',epsA(:,3),nels_x, nels_y)
+caxis([-0.02,0.02])
+saveas(gcf,strcat(output_dir,'epsilon-xy - input','.png')); 
+individual_plot(13,'Young (MPa)',E,nels_x, nels_y)
+caxis([0,4])
+saveas(gcf,strcat(output_dir,'E','.png')); 
+individual_plot(14,'poisson',v,nels_x, nels_y)
+caxis([0,0.5])
+saveas(gcf,strcat(output_dir,'v','.png')); 
+  
 %% Plot the results
-fig_num = 0;                                                                % initialize figure number
-
+% fig_num = 0;                                                                % initialize figure number
+% 
 % Matched strains:
-plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
-fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'strains-matched','.png'));                      % save images as png
-
+% plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
+% fig_num = fig_num +1; %close(fig_num);                                      % figure number
+% my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
+% saveas(gcf,strcat(output_dir,'strains-matched','.png'));                      % save images as png
+% 
 % Strains - input:
-plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
-fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'strains-input','.png'));                      % save images as png
-
+% plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
+% fig_num = fig_num +1; %close(fig_num);                                      % figure number
+% my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
+% saveas(gcf,strcat(output_dir,'strains-input','.png'));                      % save images as png
+% 
 % Elastic constants:
-fig_num = fig_num +1; %close(fig_num);                                      % figure number
-sub = my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % save images as png
-
+% fig_num = fig_num +1; %close(fig_num);                                      % figure number
+% sub = my_subplot(fig_num,{'Young', 'Poisson'},[E,v],nels_x, nels_y);
+% saveas(gcf,strcat(output_dir,'elastic_constants','.png'));                  % save images as png
+% 
 % Stress:
-fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
-saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
-
-figure(fig_num+1)
-hold on;
-%scatter(1:1:length(errorit),errorit,200,'b','s','filled')
-plot(1:1:length(errorit),errorit,'-s','MarkerSize',20,...
-    'MarkerEdgeColor','b', 'MarkerFaceColor','b','linewidth',2,'color','k')
-box on;
-xlabel('Iteration')
-ylabel('RVSE/VE_{avg}')
-set(gca,'fontsize',32,'linewidth',2);
-set(gcf,'position',[10,20,720,600])
+% fig_num = fig_num +1; %close(fig_num);                                      % figure number
+% my_subplot(fig_num,{'sigma-xx', 'sigma-yy', 'sigma-xy'},sig,nels_x, nels_y);
+% saveas(gcf,strcat(output_dir,'stress','.png'));                             % save images as png file
+% 
+% figure(fig_num+1)
+% hold on;
+% scatter(1:1:length(errorit),errorit,200,'b','s','filled')
+% plot(1:1:length(errorit),errorit,'-s','MarkerSize',20,...
+%     'MarkerEdgeColor','b', 'MarkerFaceColor','b','linewidth',2,'color','k')
+% box on;
+% xlabel('Iteration')
+% ylabel('RVSE/VE_{avg}')
+% set(gca,'fontsize',32,'linewidth',2);
+% set(gcf,'position',[10,20,720,600])
 
 %% FUNCTIONS
 % plotting function:
+
+function individual_plot(fig_num,plot_titles,data,nels_x, nels_y)
+    figure(fig_num)
+    mm = vector2matrix(data,nels_y,nels_x);                    % convert vector to matrix for plotting
+    imagesc(mm);colorbar; colormap(jet); %colormap(hsv);            % plot color map
+    xlabel('X-coord [mm]');
+    ylabel('Y-coord [mm]');
+    title('epsilon-xx - matched')
+    ax = gca;
+    axis equal;
+    axis(ax,'tight');
+    set(gca,'YDir','normal')
+    %ax.Position=[0.15,0.15,0.65,0.75];
+    title(plot_titles)
+    set(gcf,'position',[10,50,450,640])
+    set(gca,'FontSize',24)
+end
 
 function [sub] = my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     
