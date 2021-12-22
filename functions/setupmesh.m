@@ -187,8 +187,8 @@ if strcmp(bc_type,'pressure')
 %               |                           |
 %               |                           |
 %               |                           |
-%           (1) |            +|             | (3)
-%               |                           |
+%           (1) |            o              | (3)
+%               |            -              |
 %               |                           |
 %               |                           |
 %               |                           |
@@ -210,7 +210,7 @@ if strcmp(bc_type,'pressure')
         if abs(coord(node,1)-lx/2)<tol || abs(coord(node,1)-lx/2-hx/2)<tol  % if x position located at lx/2
 %             bc(node*nD-1,:) = [node*nD-1 0];                                % fix x direction
             if abs(coord(node,2)-ly/2)<tol || abs(coord(node,2)-ly/2-hy/2)<tol  % if y position located at ly/2
-                bc(node*nD-1,:) = [node*nD-1 0];                            % fix x direction
+               % bc(node*nD-1,:) = [node*nD-1 0];                            % fix x direction
                 bc(node*nD,:) = [node*nD   0];                              % fix y direction 
             end
 
