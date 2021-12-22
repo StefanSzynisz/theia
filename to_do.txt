@@ -1,0 +1,11 @@
+- docs: Stefan, Chengyang,
+-- README.md and markdown formatting,
+-- section about ncorr data processing
+- process input with coordinates vs data into elem_num vs data: Jonathan,
+- article: Stefan,
+- processing of multiple files: Chengyang, Jonathan,
+- plotting scale to reduce the impact of outliers: Stefan, Jonathan,
+- BC conditions: Stefan
+-- change the solver so we can apply various BC conditions with ease,
+- 3D solver,
+- testowa zmiana.

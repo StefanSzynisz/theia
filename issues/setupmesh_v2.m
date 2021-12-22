@@ -82,16 +82,17 @@ function [mesh] = setupmesh(lx,ly,nels_x,nels_y,pressure,E_mat,v_mat,bc_type)
 %% Boundary condition information 
 if strcmp(bc_type,'roller')
     BCt    = [2 -2  2 3];                                                   % boundary condition flags
+    % Negative value for compression and positive for tension
     BCp    = [0 -pressure 0 0];                                             % boundary condition pressures (normal) for each edge
-                                                                            % Second entry is pressure applied to face (2)
 elseif strcmp(bc_type,'fixed')
-    BCt    = [2 -2  2 1];                                                          
+    BCt    = [2 -2  2 1];  
+    % Negative value for compression and positive for tension
     BCp    = [0 -pressure 0 0];                                             % boundary condition pressures (normal) for each edge
-elseif strcmp(bc_type,'pressure')                                           % Negative value for compression and positive for tension
-%     BCt    = [2 -2  3 -2]; 
-    BCt    = [2 -2  2 -2]; 
+elseif strcmp(bc_type,'pressure')
+    BCt    = [2 -2  3 -2];  
+%     BCt    = [3 -2  2 -2];
+    % Negative value for compression and positive for tension
     BCp    = [0 -pressure 0 -pressure];                                     % boundary condition pressures (normal) for each edge
-
 else
     BCt    = [2 -2  2 1];  
     BCp    = [0 -pressure 0 0];  
@@ -101,6 +102,10 @@ BCu    = [0 0;                                                              % bo
           0 0; 
           0 0; 
           0 0];
+      
+
+
+% Second entry is pressure applied to face (2)
 
 %% Other settings/output options
 VTKout = 1;                                                                 % VTK output flag 
@@ -150,7 +155,7 @@ for edge = 1:noE                                                            % lo
         
     elseif BCe == -2                                                        % traction (Neumann) boundary conditions
         
-        p = BCp(edge)*lx/nels_x;                                            % load over each element segment 
+        p = BCp(edge)*lx/nels_x;                                             % load over each element segment 
         p = p*ones(length(nn),1)* BCnorm(edge,:);                           % nodal forces [x y]
         p = reshape(p',length(dofs),1);                                     % nodal forces (vector format)
         if BCxy(edge) == 1
@@ -174,59 +179,6 @@ for edge = 1:noE                                                            % lo
         
     end
 end
-
-tol    = 1e-9;                                                              % numerical tolerance
-if strcmp(bc_type,'pressure')  
-%
-%               ^ y
-%               |
-%               |
-%                           (2)
-%                ---------------------------
-%               |            o|             |
-%               |                           |
-%               |                           |
-%               |                           |
-%           (1) |            o              | (3)
-%               |            -              |
-%               |                           |
-%               |                           |
-%               |                           |
-%               |            o|             |
-%                ---------------------------      -----> x
-%                           (4)
-%
-%
-% The problem will only be symmetric if an even number of elements are 
-% used in the x and y directions.  If not, the boundary conditions will be 
-% imposed off centre. 
-
-    % Roller boundary conditions applied at x position lx/2.
-    % Fixed boundary condition applied at (x,y) = (lx/2,ly/2).
-    % These are implemented below.
-    hx = lx/nels_x;                                                         % element spacing (x direction)
-    hy = ly/nels_y;                                                         % element spacing (y direction)
-    for node = 1:nodes                                                      % loop over all nodes
-        if abs(coord(node,1)-lx/2)<tol || abs(coord(node,1)-lx/2-hx/2)<tol  % if x position located at lx/2
-%             bc(node*nD-1,:) = [node*nD-1 0];                                % fix x direction
-            if abs(coord(node,2)-ly/2)<tol || abs(coord(node,2)-ly/2-hy/2)<tol  % if y position located at ly/2
-               % bc(node*nD-1,:) = [node*nD-1 0];                            % fix x direction
-                bc(node*nD,:) = [node*nD   0];                              % fix y direction 
-            end
-
-            if abs(coord(node,2)-0)<tol || abs(coord(node,2)-0-hy/2)<tol    % if y position located at 0
-                bc(node*nD-1,:) = [node*nD-1 0];                            % fix x direction
-            end
-
-            if abs(coord(node,2)-ly)<tol || abs(coord(node,2)-ly-hy/2)<tol    % if y position located at ly
-                bc(node*nD-1,:) = [node*nD-1 0];                            % fix x direction
-            end
-
-        end
-    end
-end
-
-
 bc = bc(bc(:,1)>0,:);                                                       % remove unused bc rows
 
 if (isscalar(E_mat))

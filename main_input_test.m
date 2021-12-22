@@ -31,15 +31,15 @@ clear; tic;                                                                 % cl
 
 %% Physical problem description:
 % *****************************
-pressure = -0.06;                                                           % pressure in [Pa]
+pressure = -0.06;                                                            % pressure in [Pa]
 element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
 bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'fixed' or 'roller' or 'pressure'
    
 %% Read strain inputs:
 %****************************
 % readCSVfile
-epsA = xlsread('data\exp_trial\trial_15.csv');                              % strain input: xx, yy, xy
-epsA = epsA(:,3:end);
+epsA = csvread('data/random order/trialrand_1.csv');                                            % strain input: xx, yy, xy
+[epsA, nx, ny, delta_x, delta_y] = orderInputs(epsA)
 % reshape_the_data;
 % Check the data
 
@@ -48,12 +48,12 @@ epsA = epsA(:,3:end);
 itMax = 18;                                                                 % maximum number of iterations
 tol   = 1e-7;                                                               % tolerance
 filter_type = 'None';                                                       % 'None','Gaussian' or 'MovingAverage'
-filter_size = 3;                                                            % 3, 5, or any higher odd number.
+filter_size = 1;                                                            % 3, 5, or any higher odd number.
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
 nels_x = 47;                                                                % number of elements in the x direction
-nels_y = 91;                                                                % number of elements in the y direction
+nels_y = 69;                                                            % number of elements in the y direction
 % **************
 nels = nels_x * nels_y;                                                     % total number of elements
 l_x = nels_x * element_size;                                                % domain size in x-direction
@@ -114,7 +114,7 @@ itnum = 0;                                                                  % ze
 while error > tol && itnum < itMax && delta_error < 0                       % while loop (as long as error is decreasing)
     itnum = itnum+1;                                                        % iteration counter
     fprintf('\n%s%8i\n','   iteration number     ',itnum);                  % print iteration number
-    [sig,epsH,~] = LEfe(mesh);                                              % finite element solver
+    [sig,epsH,~] = LEfe(mesh,itnum);                                        % finite element solver
     for i=1:3                                                               % Gaussian smoothing of experimental noise
         if (strcmp(filter_type,'None') ~= 1)
             sig(:,i) = smoothVector(sig(:,i),nels_y,nels_x,filter_type,filter_size);
