@@ -48,7 +48,7 @@ epsA = epsA(:,3:end);
 itMax = 18;                                                                 % maximum number of iterations
 tol   = 1e-7;                                                               % tolerance
 filter_type = 'None';                                                       % 'None','Gaussian' or 'MovingAverage'
-filter_size = 1;                                                            % 3, 5, or any higher odd number.
+filter_size = 3;                                                            % 3, 5, or any higher odd number.
 
 %% Set up the physical model (based on the user input and characteristics of the supplied data):
 % *************************************************************************
