@@ -33,7 +33,7 @@ clear; tic;                                                                 % cl
 % *****************************
 pressure = -0.06;                                                           % pressure in [Pa]
 element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
-bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'fixed' or 'roller' or 'pressure'
+bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'pressure' or 'roller' or 'fixed'
    
 %% Read strain inputs:
 %****************************
