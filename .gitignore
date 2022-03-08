@@ -1,6 +1,7 @@
-## Videos:
+## Videos and images:
 *.mp4
 *.tscproj
+.png
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
