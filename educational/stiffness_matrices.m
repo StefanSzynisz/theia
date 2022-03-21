@@ -1,8 +1,17 @@
-% Constructing the element stiffness matrix and the global stiffness matrix
+% PURPOSE
+%   Constructing the element stiffness matrix and the global stiffness matrix
+%
+% DEPENDENCIES:
+% 
+% RELATED SCRIPTS:
+%   stiffness_matrices.m
+% Date:
+%   03-March-2022
+%  ----------------------------------------------------------------
 
-% Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions
+%% Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions
 syms E nu x y
-% Plane-stress elastic stiffness matrix
+% Plane-stress elastic stiffness matrix:
 De = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 % Shape functions of bilinear elements (assuming local and global coordinates are aligned)
 N1 = 1/4*(1-x)*(1-y);
@@ -37,14 +46,14 @@ disp(A11)
 disp(A12)
 disp(B11)
 disp(B12)
-% Substituting specific values for variables
-E = 1;
-nu = 0.3;
-ke_subs = subs(ke); % Symbolic expression using fractions
-ke_subn = double(ke_subs); % Numerical expression in double precision
-disp(ke_subs)
-disp(ke_subn)
-% Example construction of the global stiffness matrix for a 2x2 mesh
+%% Substituting specific values for variables
+% E = 1;
+% nu = 0.3;
+% ke_subs = subs(ke);                                                         % Symbolic expression using fractions
+% ke_subn = double(ke_subs);                                                  % Numerical expression in double precision
+% disp(ke_subs)
+% disp(ke_subn)
+%% Example construction of the global stiffness matrix for a 2x2 mesh
 nelx = 2;
 nely = 2;
 neltot = nelx*nely;
@@ -63,3 +72,15 @@ for i = 1:neltot
     end
 end
 disp(K)
+
+%% Solve for the global, unknown displacements:
+
+
+%% Solve for strains in each element:
+% use edofMat
+
+
+%% Solve for stresses in each element:
+
+
+
