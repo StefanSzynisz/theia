@@ -1,4 +1,19 @@
-% Constructing the element stiffness matrix and the global stiffness matrix
+% forward problem for 2x2 mesh:
+%--------------------------------------------------------------------------
+% Author: Stefan Szyniszewski and Edward Street
+% Date:   10/03/2021
+% Description: the script to solve the forward problem, i.e. computing
+% displacement, strains, and stress for a problem with known boundary
+% conditons, loads and elastic materials properties.
+%
+%--------------------------------------------------------------------------
+clearvars; close all; clc;
+% [thisPath,~,~] = fileparts(matlab.desktop.editor.getActiveFilename);
+% cd(thisPath);                                                             % change directory to current path
+addpath('functions');                                                       % add path to functions folder
+clear; tic; 
+
+%% Constructing the element stiffness matrix
 
 % Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions
 syms E nu x y
@@ -17,8 +32,9 @@ B = [ diff(N1,x),          0, diff(N2,x),          0, diff(N3,x),          0, di
 ke = int(int(B'*De*B,-1,1),-1,1);
 disp(ke)
 % Matrix after factorising common terms
-ke_fact = simplify(ke/E*24*(1-nu^2));
-% Evaluating matrix slices
+ke_fact = simplify(ke/E*24*(1-nu^2),'Steps',10);
+
+%% Evaluating matrix slices
 A = sym(zeros(size(ke_fact)));
 B = sym(zeros(size(ke_fact)));
 dims = size(ke_fact);
@@ -37,7 +53,7 @@ disp(A11)
 disp(A12)
 disp(B11)
 disp(B12)
-% Substituting specific values for variables
+%% Substituting specific values for variables
 E = 1;
 nu = 0.3;
 ke_subs = subs(ke); % Symbolic expression using fractions
