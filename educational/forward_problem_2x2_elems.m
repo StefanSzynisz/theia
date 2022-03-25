@@ -1,5 +1,4 @@
-<<<<<<< HEAD:educational/analytical/forward_problem_2x2_elems.m
-% forward problem for 2x2 mesh:
+% Forward problem for 2x2 mesh:
 %--------------------------------------------------------------------------
 % Author: Stefan Szyniszewski and Edward Street
 % Date:   10/03/2021
@@ -13,20 +12,6 @@ clearvars; close all; clc;
 % cd(thisPath);                                                             % change directory to current path
 addpath('functions');                                                       % add path to functions folder
 clear; tic; 
-
-%% Constructing the element stiffness matrix
-=======
-% PURPOSE
-%   Constructing the element stiffness matrix and the global stiffness matrix
-%
-% DEPENDENCIES:
-% 
-% RELATED SCRIPTS:
-%   stiffness_matrices.m
-% Date:
-%   03-March-2022
-%  ----------------------------------------------------------------
->>>>>>> 4dbad6a1e0e7f840e68f5d2c17e5ad3f4b368550:educational/stiffness_matrices.m
 
 %% Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions
 syms E nu x y
@@ -42,40 +27,14 @@ B = [ diff(N1,x),          0, diff(N2,x),          0, diff(N3,x),          0, di
                0, diff(N1,y),          0, diff(N2,y),          0, diff(N3,y),          0, diff(N4,y);
       diff(N1,y), diff(N1,x), diff(N2,y), diff(N2,x), diff(N3,y), diff(N3,x), diff(N4,y), diff(N4,x) ];
 % Element stiffness matrix  
+disp('Element stiffness matrix:');
+fprintf('======================== \n');
 ke = int(int(B'*De*B,-1,1),-1,1);
 disp(ke)
 % Matrix after factorising common terms
 ke_fact = simplify(ke/E*24*(1-nu^2),'Steps',10);
 
-%% Evaluating matrix slices
-A = sym(zeros(size(ke_fact)));
-B = sym(zeros(size(ke_fact)));
-dims = size(ke_fact);
-for i = 1:dims(1)
-    for j = 1:dims(2)
-        coeffs = sym2poly(ke_fact(i,j));
-        B(i,j) = coeffs(1);
-        A(i,j) = coeffs(2);
-    end
-end
-A11 = A(1:dims(1)/2,1:dims(2)/2);
-A12 = A(1:dims(1)/2,dims(2)/2+1:dims(2));
-B11 = B(1:dims(1)/2,1:dims(2)/2);
-B12 = B(1:dims(1)/2,dims(2)/2+1:dims(2));
-disp(A11)
-disp(A12)
-disp(B11)
-disp(B12)
 %% Substituting specific values for variables
-<<<<<<< HEAD:educational/analytical/forward_problem_2x2_elems.m
-E = 1;
-nu = 0.3;
-ke_subs = subs(ke); % Symbolic expression using fractions
-ke_subn = double(ke_subs); % Numerical expression in double precision
-disp(ke_subs)
-disp(ke_subn)
-% Example construction of the global stiffness matrix for a 2x2 mesh
-=======
 % E = 1;
 % nu = 0.3;
 % ke_subs = subs(ke);                                                         % Symbolic expression using fractions
@@ -83,7 +42,8 @@ disp(ke_subn)
 % disp(ke_subs)
 % disp(ke_subn)
 %% Example construction of the global stiffness matrix for a 2x2 mesh
->>>>>>> 4dbad6a1e0e7f840e68f5d2c17e5ad3f4b368550:educational/stiffness_matrices.m
+disp('Global stiffness matrix:');
+fprintf('======================== \n');
 nelx = 2;
 nely = 2;
 neltot = nelx*nely;

@@ -1,21 +1,5 @@
-<<<<<<< HEAD:educational/analytical/forward_problem_2x2_elems.m
-% forward problem for 2x2 mesh:
-%--------------------------------------------------------------------------
-% Author: Stefan Szyniszewski and Edward Street
-% Date:   10/03/2021
-% Description: the script to solve the forward problem, i.e. computing
-% displacement, strains, and stress for a problem with known boundary
-% conditons, loads and elastic materials properties.
-%
-%--------------------------------------------------------------------------
-clearvars; close all; clc;
-% [thisPath,~,~] = fileparts(matlab.desktop.editor.getActiveFilename);
-% cd(thisPath);                                                             % change directory to current path
-addpath('functions');                                                       % add path to functions folder
-clear; tic; 
-
 %% Constructing the element stiffness matrix
-=======
+% =======
 % PURPOSE
 %   Constructing the element stiffness matrix and the global stiffness matrix
 %
@@ -26,7 +10,6 @@ clear; tic;
 % Date:
 %   03-March-2022
 %  ----------------------------------------------------------------
->>>>>>> 4dbad6a1e0e7f840e68f5d2c17e5ad3f4b368550:educational/stiffness_matrices.m
 
 %% Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions
 syms E nu x y
@@ -67,23 +50,14 @@ disp(A12)
 disp(B11)
 disp(B12)
 %% Substituting specific values for variables
-<<<<<<< HEAD:educational/analytical/forward_problem_2x2_elems.m
 E = 1;
 nu = 0.3;
 ke_subs = subs(ke); % Symbolic expression using fractions
 ke_subn = double(ke_subs); % Numerical expression in double precision
 disp(ke_subs)
 disp(ke_subn)
-% Example construction of the global stiffness matrix for a 2x2 mesh
-=======
-% E = 1;
-% nu = 0.3;
-% ke_subs = subs(ke);                                                         % Symbolic expression using fractions
-% ke_subn = double(ke_subs);                                                  % Numerical expression in double precision
-% disp(ke_subs)
-% disp(ke_subn)
+
 %% Example construction of the global stiffness matrix for a 2x2 mesh
->>>>>>> 4dbad6a1e0e7f840e68f5d2c17e5ad3f4b368550:educational/stiffness_matrices.m
 nelx = 2;
 nely = 2;
 neltot = nelx*nely;
@@ -103,14 +77,7 @@ for i = 1:neltot
 end
 disp(K)
 
-%% Solve for the global, unknown displacements:
 
-
-%% Solve for strains in each element:
-% use edofMat
-
-
-%% Solve for stresses in each element:
 
 
 
