@@ -13,58 +13,136 @@ clearvars; close all; clc;
 addpath('functions');                                                       % add path to functions folder
 clear; tic; 
 
-%% Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions
+%% Creating an element stiffness matrix for 2D bilinear elements in plane-stress conditions:
 syms E nu x y
 % Plane-stress elastic stiffness matrix:
 De = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
-% Shape functions of bilinear elements (assuming local and global coordinates are aligned)
+% Shape functions of bilinear elements (assuming local and global
+% coordinates are aligned):
 N1 = 1/4*(1-x)*(1-y);
 N2 = 1/4*(1+x)*(1-y);
 N3 = 1/4*(1+x)*(1+y);
 N4 = 1/4*(1-x)*(1+y);
-% Strain-displacement matrix
+% Strain-displacement matrix:
 B = [ diff(N1,x),          0, diff(N2,x),          0, diff(N3,x),          0, diff(N4,x),          0;
                0, diff(N1,y),          0, diff(N2,y),          0, diff(N3,y),          0, diff(N4,y);
       diff(N1,y), diff(N1,x), diff(N2,y), diff(N2,x), diff(N3,y), diff(N3,x), diff(N4,y), diff(N4,x) ];
-% Element stiffness matrix  
+% Element stiffness matrix:  
 disp('Element stiffness matrix:');
 fprintf('======================== \n');
 ke = int(int(B'*De*B,-1,1),-1,1);
 disp(ke)
-% Matrix after factorising common terms
+% Matrix after factorising common terms:
 ke_fact = simplify(ke/E*24*(1-nu^2),'Steps',10);
 
-%% Substituting specific values for variables
+%% Example construction of the global stiffness matrix for a 2x2 mesh:
+%
+%    ^ 2          ^ 8           ^14
+%    |  1         |  7          |  13
+%    o-->---------o-->----------o-->
+% [1]|         [4]|          [7]|
+%    |            |             |
+%    |     (1)    |      (3)    |
+%    ^ 4          ^ 10          ^ 16
+%    |  3         |  9          |  15
+%    o-->---------o-->----------o-->
+% [2]|         [5]|          [8]|
+%    |            |             |
+%    |     (2)    |      (4)    |
+%    ^ 6          ^ 12          ^ 18
+%    |  5         |  11         |  17
+%    o-->---------o-->----------o-->
+% [3]          [6]           [9]
+%
+%  --> 1  - dof number
+%  [1] o  - node
+%  (1)    - elemenent
+%
+
+%% Generation of symbolic variables for each element:
+E_g = sym('E_%d',[1 4]);                                                    % symbolic Young modulus in each element 1, 2, ..., 4
+nu_g = sym('nu_%d',[1 4]);                                                  % symbolic Poisson ratio in each element 1, 2, ..., 4
+
+%% Globa stiffness matrix:
+disp('Global stiffness matrix:');
+fprintf('======================== \n');
+nelx = 2;                                                                   % number of elements in x-direction
+nely = 2;                                                                   % number of elements in y-direction
+neltot = nelx*nely;                                                         % total number of elements
+ngnodes = (nelx+1)*(nely+1);                                                % total number of nodes
+nldofs = 8;                                                                 % number of dof of each elements
+ngdofs = 2*ngnodes;                                                         % total number of dofs (2 dof per each node)
+gnodes = reshape(1:(1+nelx)*(1+nely),1+nely,1+nelx);                        % Matrix with global node numbers                        
+edofvec = reshape(2*gnodes(1:end-1,1:end-1)+1,neltot,1);
+edofmat = repmat(edofvec,1,8)+repmat([0 1 2*nely+[2 3 0 1] -2 -1],neltot,1); % Matrix giving global dofs for each element (row)
+%
+%               [3	4	9	10	7	8	1	 2 ]  <- Element 1
+%  edofMat =    [5	6	11	12	9	10	3	 4 ]  <- Element 2
+%               [9	10	15	16	13	14	7	 8 ]  <- Element 3
+%               [11	12	17	18	15	16	9	10 ]  <- Element 4
+%
+Kg = sym(zeros(ngdofs,ngdofs));
+for i = 1:neltot                                                            % for each element:
+    tmp = subs(ke,E,E_g(i));                                                % substitute E for E_g(i)
+    ke_i = subs(tmp,nu,nu_g(i));                                            % substitute nu for nu_g(i)
+    for j = 1:2:nldofs                                                      
+        for k = 1:2:nldofs                                                  
+            Kg(edofmat(i,j):edofmat(i,j+1),edofmat(i,k):edofmat(i,k+1)) = ...
+                Kg(edofmat(i,j):edofmat(i,j+1),edofmat(i,k):edofmat(i,k+1)) + ...
+                ke_i(j:j+1,k:k+1);
+        end
+    end
+end
+clear i j k tmp ke_i
+Kg = simplify(Kg,'Steps',10);
+disp(Kg)
+
+%% Load and boundary conditions (BC):
+%   
+%   || P          || P          || P
+%   \/            \/            \/
+%    ^ 2_         ^ 8_          ^14_
+%    |  1         |  7          |  13
+%    o-->---------o-->----------o-->
+%    |            |             |
+%    |            |             |
+%    |     (1)    |      (3)    |
+%    ^ 4          ^ 10          ^ 16
+%    |  3         |  9          |  15
+%    o-->---------o-->----------o-->
+%    |            |             |
+%    |            |             |
+%    |     (2)    |      (4)    |
+%    ^ 6_         ^ 12_         ^ 18_
+%    |  5_        |  11         |  17
+% |> o-->---------o-->----------o-->
+%    /\           /\            /\
+%    ""           ""            ""
+indx_P = [2 8 14];                                                          % dof with force application
+indx_BC = [5 6 12 18];                                                      % dof with fixed dof 
+
+%% Remove rows and columns corresponding to fixed BC
+indx_active = setdiff([1:1:ngdofs],indx_BC);
+Kbc = Kg(indx_active,indx_active);
+
+%% Create loading vector:
+
+
+%% Solve for the global, unknown displacements:
+
+
+
+%% Substituting specific values for variables (using numeric list):
+E_num = [25 25 25 25];
+nu_num = [0.2 0.2 0.2 0.2];
 % E = 1;
 % nu = 0.3;
 % ke_subs = subs(ke);                                                         % Symbolic expression using fractions
 % ke_subn = double(ke_subs);                                                  % Numerical expression in double precision
 % disp(ke_subs)
 % disp(ke_subn)
-%% Example construction of the global stiffness matrix for a 2x2 mesh
-disp('Global stiffness matrix:');
-fprintf('======================== \n');
-nelx = 2;
-nely = 2;
-neltot = nelx*nely;
-ngnodes = (nelx+1)*(nely+1);
-nldofs = 8;
-ngdofs = 2*ngnodes;
-gnodes = reshape(1:(1+nelx)*(1+nely),1+nely,1+nelx);
-edofvec = reshape(2*gnodes(1:end-1,1:end-1)+1,neltot,1);
-edofmat = repmat(edofvec,1,8)+repmat([0 1 2*nely+[2 3 0 1] -2 -1],neltot,1);
-K = sym(zeros(ngdofs,ngdofs));
-for i = 1:neltot
-    for j = 1:2:nldofs
-        for k = 1:2:nldofs
-            K(edofmat(i,j):edofmat(i,j+1),edofmat(i,k):edofmat(i,k+1)) = K(edofmat(i,j):edofmat(i,j+1),edofmat(i,k):edofmat(i,k+1)) + ke(j:j+1,k:k+1);
-        end
-    end
-end
-disp(K)
 
-%% Solve for the global, unknown displacements:
-
+% u_num;
 
 %% Solve for strains in each element:
 % use edofMat
