@@ -118,16 +118,21 @@ disp(Kg)
 % |> o-->---------o-->----------o-->
 %    /\           /\            /\
 %    ""           ""            ""
-indx_P = [2 8 14];                                                          % dof with force application
-indx_BC = [5 6 12 18];                                                      % dof with fixed dof 
-
+force_dofs = [2 8 14];                                                      % dof with force application
+fixed_dofs = [5 6 12 18];                                                   % dof with fixed dof 
+all_dofs = [1:1:ngdofs];
+free_dofs = setdiff(all_dofs,fixed_dofs);
 %% Remove rows and columns corresponding to fixed BC
-indx_active = setdiff([1:1:ngdofs],indx_BC);
-Kbc = Kg(indx_active,indx_active);
+K_free = Kg(free_dofs,free_dofs);                                           % stiffness matrix corresponding to unknown displacements
 
 %% Create loading vector:
-
-
+disp('Global stiffness matrix:');
+fprintf('======================== \n');
+Force = sym('F_%d',[1 ngdofs])';                                            % initialize symbolic force vector
+syms P                                                                      % symbolic load value
+Force(free_dofs) = zeros(size(free_dofs));                                  % assign zeros to dofs without any load applied                                                    
+Force(force_dofs) = P * ones(size(force_dofs,2),1);                         % assign loads to selected dofs
+disp(Force)
 %% Solve for the global, unknown displacements:
 
 
