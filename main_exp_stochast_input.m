@@ -88,10 +88,23 @@ l_y = nels_y * element_size;                                                % do
 eps_xx_avg = mean(epsA(:,1));                                               % average tranverse strain
 eps_yy_avg = mean(epsA(:,2));                                               % average axial (loading direction) strain
 
+%% Test the effect of the starting, initial points:
+wacky_scale = 1;                                                           % scale initial solution to test convergence
+E_avg = -pressure / eps_yy_avg * wacky_scale;                              % average Young modulus
+v_avg = -eps_xx_avg/eps_yy_avg * wacky_scale;                              % average Poisson ratio
+
+% Generate a random, correlated field:
 Lx = nels_x * element_size;                                                 % length of the domain
-wacky_scale = 1;                                                            % scale initial solution to test convergence
-E_init = -pressure / eps_yy_avg * wacky_scale;                              % average Young modulus
-v_init = -eps_xx_avg/eps_yy_avg * wacky_scale;                              % average Poisson ratio
+Ly = nels_y * element_size;                                                 % height of the domain
+% Elements ids are:
+element_ids = [1:1:nels]';                                                  % we number the element centroids
+coordZ = zeros(nels,1);                                                     % our tests are 2D so out-of-plane coordinate is zero
+[coordX, coordY] = elemCoordVector(Lx,Ly,nels_x,nels_y);                    % coordinates of the centroids
+elem_centroids = [element_ids, coordX, coordY, coordZ];
+beta = 0.5;                                                                 % cross-correlation
+gamma = 0.3*min(Lx,Ly);                                                     % spatial correlation length
+[E_init, v_init] = ...
+    spatially_correlated_two_variables(E_avg, 0.2, v_avg, 0.1, gamma,beta, elem_centroids);
 
 %% Set FE parameters based on the user input and characteristics of the supplied data:
 mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init,bc_type);     % initialize mesh
