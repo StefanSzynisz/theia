@@ -28,11 +28,11 @@ clc;
 % cd(thisPath);                                                             % change directory to current path
 addpath('functions');                                                       % add path to functions folder
 clear; tic;                                                                 % clear all breakpoints and start stopwatch for computatotional efficiency calcs
-
+save_animation = "yes";                                                     % if "yes", then save video file with the iterations
 %% Physical problem description:
 % *****************************
 pressure = -0.06;                                                           % pressure in [Pa]
-element_size = 0.8592;                                                      % physical length (of pixel) in [m] or other consistent units
+element_size = 0.8592;                                                      % physical length (of pixel) in [mm] or other consistent units
 bc_type = 'pressure';                                                       % type of boundaries at the bottom: 'pressure' or 'roller' or 'fixed'
    
 %% Read strain inputs:
@@ -45,7 +45,7 @@ epsA = epsA(:,3:end);
 
 %% Set solver tolerances:
 % **********************
-itMax = 18;                                                                 % maximum number of iterations
+itMax = 20;                                                                 % maximum number of iterations
 tol   = 1e-7;                                                               % tolerance
 filter_type = 'None';                                                       % 'None','Gaussian' or 'MovingAverage'
 filter_size = 3;                                                            % 3, 5, or any higher odd number.
@@ -138,6 +138,9 @@ while error > tol && itnum < itMax && delta_error < 0                       % wh
     imagesc(matrix);colorbar; colormap; axis equal; axis off;               % plot color map
     drawnow limitrate nocallbacks;                                          % drawnow with 20 frames per second limit
     title( strcat('\sigma - yy - iteration:',num2str(itnum)) );
+    if strcmp(save_animation,"yes") 
+        FrameStress(itnum) = getframe(gcf);
+    end
     errorit(itnum)=error;
 end
 
@@ -159,8 +162,9 @@ fig_num = 0;                                                                % in
 % Matched strains:
 plot_titles = {'epsilon-xx - matched', 'epsilon-yy - matched', 'epsilon-xy - matched'};
 fig_num = fig_num +1; %close(fig_num);                                      % figure number
-my_subplot(fig_num,plot_titles,epsA,nels_x, nels_y);
+my_subplot(fig_num,plot_titles,epsH,nels_x, nels_y);
 saveas(gcf,strcat(output_dir,'strains-matched','.png'));                      % save images as png
+
 
 % Strains - input:
 plot_titles = {'epsilon-xx - input', 'epsilon-yy - input', 'epsilon-xy - input'};
@@ -189,8 +193,22 @@ ylabel('RVSE/VE_{avg}')
 set(gca,'fontsize',32,'linewidth',2);
 set(gcf,'position',[10,20,720,600])
 
+%% Save animations:
+video_duration = 10;                                                        % sec
+if strcmp(save_animation,"yes") 
+    my_video('Stress_iterations',  video_duration, FrameStress, itnum);
+end
+
 %% FUNCTIONS
 % plotting function:
+
+function my_video(filename,  video_duration, FrameFile, itnum)
+    video = VideoWriter(filename,'MPEG-4');
+    video.FrameRate = itnum/video_duration;                                % # frames per second such that video lasts 10 sec
+    open(video)
+        writeVideo(video,FrameFile);
+    close(video) 
+end
 
 function [sub] = my_subplot(fig_num,plot_titles,data,nels_x, nels_y)
     
