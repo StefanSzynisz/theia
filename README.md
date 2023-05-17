@@ -6,8 +6,8 @@ How to run the code?
 
 Steps to run and execute the code.
 
-- rere
-- testst
+- Content coming here soon
+- 
 
 
 # How it works?
