@@ -103,8 +103,7 @@ coordZ = zeros(nels,1);                                                     % ou
 elem_centroids = [element_ids, coordX, coordY, coordZ];
 beta = 0.5;                                                                 % cross-correlation
 gamma = 0.3*min(Lx,Ly);                                                     % spatial correlation length
-[E_init, v_init] = ...
-    spatially_correlated_two_variables(E_avg, 0.2, v_avg, 0.1, gamma,beta, elem_centroids);
+[E_init, v_init] = spatially_correlated_two_variables(E_avg, 0.2, v_avg, 0.1, gamma,beta, elem_centroids);
 
 %% Set FE parameters based on the user input and characteristics of the supplied data:
 mesh = setupmesh(l_x,l_y,nels_x,nels_y,pressure,E_init,v_init,bc_type);     % initialize mesh

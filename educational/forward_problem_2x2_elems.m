@@ -8,8 +8,8 @@
 %
 %--------------------------------------------------------------------------
 clearvars; close all; clc;
-% [thisPath,~,~] = fileparts(matlab.desktop.editor.getActiveFilename);
-% cd(thisPath);                                                             % change directory to current path
+[thisPath,~,~] = fileparts(matlab.desktop.editor.getActiveFilename);
+cd(thisPath);                                                               % change directory to current path
 addpath('functions');                                                       % add path to functions folder
 clear; tic; 
 

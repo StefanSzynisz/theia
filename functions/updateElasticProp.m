@@ -15,7 +15,9 @@ function [E,v] = updateElasticProp(sig,epsA)
 %--------------------------------------------------------------------------
 % Input(s):
 % sig   - predicted stress values (nels,3)
+%   xx, yy and xy order ??
 % epsA  - reference strain values (nels,3)
+%   xx, yy and xy order ??
 %--------------------------------------------------------------------------
 % Ouput(s);
 % E     - updated Young's modulus (nels,1)

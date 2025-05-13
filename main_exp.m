@@ -1,4 +1,4 @@
-%plane stress field and elastic property solver
+% Plane stress field and elastic property solver
 %--------------------------------------------------------------------------
 % Author: Stefan Szyniszewski
 % Date:   06/07/2021
@@ -40,6 +40,8 @@ bc_type = 'pressure';                                                       % ty
 % readCSVfile
 epsA = xlsread('data\exp_trial\trial_15.csv');                              % strain input: xx, yy, xy
 epsA = epsA(:,3:end);
+% sequence corresponds to elements number, and col_1 = eps_xx, col_2 =
+% eps_yy, col_3 = eps_xy.
 % reshape_the_data;
 % Check the data
 
